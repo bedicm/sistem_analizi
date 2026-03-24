@@ -1,0 +1,2316 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistem Analizi ve Tasarımı — Sınav Çalışma Rehberi</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e1a;
+  --bg2: #111827;
+  --bg3: #1a2235;
+  --card: #151e2e;
+  --border: #1e2d44;
+  --border2: #2a3f5f;
+  --text: #e2e8f0;
+  --text2: #94a3b8;
+  --text3: #64748b;
+  --accent: #3b82f6;
+  --accent2: #60a5fa;
+  --accent3: #93c5fd;
+  --gold: #f59e0b;
+  --gold2: #fbbf24;
+  --green: #10b981;
+  --red: #ef4444;
+  --purple: #8b5cf6;
+  --cyan: #06b6d4;
+  --w1: #3b82f6;
+  --w2: #8b5cf6;
+  --w3: #10b981;
+  --w3b: #06b6d4;
+  --w5: #f59e0b;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ── SIDEBAR ── */
+#sidebar {
+  width: 280px;
+  min-width: 280px;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s;
+}
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent2);
+  margin-bottom: 6px;
+}
+
+.sidebar-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.sidebar-sub {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 4px;
+}
+
+.search-box {
+  margin: 12px 16px;
+  position: relative;
+}
+
+.search-box input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px 8px 34px;
+  font-size: 13px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-box input:focus { border-color: var(--accent); }
+.search-box input::placeholder { color: var(--text3); }
+
+.search-box::before {
+  content: '⌕';
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text3);
+  font-size: 16px;
+}
+
+.nav-section {
+  padding: 8px 12px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px;
+  cursor: pointer;
+  border-radius: 0;
+  transition: all 0.15s;
+  font-size: 13px;
+  color: var(--text2);
+  border-left: 3px solid transparent;
+  position: relative;
+}
+
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active { 
+  background: rgba(59,130,246,0.08); 
+  color: var(--text);
+  border-left-color: var(--accent);
+}
+
+.nav-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 99px;
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.nav-sub {
+  padding: 6px 16px 6px 42px;
+  font-size: 12px;
+  color: var(--text3);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.nav-sub:hover { color: var(--accent2); }
+.nav-sub.active { color: var(--accent2); }
+
+.nav-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+}
+
+.progress-label {
+  font-size: 11px;
+  color: var(--text3);
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.progress-bar {
+  height: 4px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--cyan));
+  border-radius: 99px;
+  transition: width 0.5s;
+}
+
+/* ── MAIN ── */
+#main {
+  flex: 1;
+  height: 100vh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(10,14,26,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar-breadcrumb {
+  font-size: 12px;
+  color: var(--text3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.topbar-breadcrumb span { color: var(--text); font-weight: 500; }
+
+.topbar-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text2);
+}
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent2); background: rgba(59,130,246,0.06); }
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+}
+.btn-primary:hover { background: var(--accent2); }
+
+/* ── CONTENT SECTIONS ── */
+.page { display: none; padding: 40px 40px 80px; max-width: 960px; }
+.page.active { display: block; }
+
+/* HOME */
+.home-hero {
+  text-align: center;
+  padding: 60px 20px 48px;
+}
+
+.hero-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent2);
+  margin-bottom: 16px;
+}
+
+.hero-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #fff 0%, var(--accent3) 50%, var(--cyan) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+}
+
+.hero-sub {
+  font-size: 16px;
+  color: var(--text2);
+  max-width: 480px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.week-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.week-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 12px 12px 0 0;
+}
+
+.week-card.w1::before { background: var(--w1); }
+.week-card.w2::before { background: var(--w2); }
+.week-card.w3::before { background: var(--w3); }
+.week-card.w3b::before { background: var(--w3b); }
+.week-card.w5::before { background: var(--w5); }
+
+.week-card:hover {
+  border-color: var(--border2);
+  transform: translateY(-2px);
+  background: var(--bg3);
+}
+
+.card-week {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 8px;
+}
+
+.card-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.card-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.tag {
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 99px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text3);
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--accent2);
+}
+
+.stat-lbl {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 2px;
+}
+
+/* ── CONTENT STYLES ── */
+.page-header {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.page-week {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.page-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.page-date {
+  font-size: 13px;
+  color: var(--text3);
+}
+
+.toc {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 32px;
+}
+
+.toc-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 10px;
+}
+
+.toc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.toc-link {
+  font-size: 13px;
+  color: var(--text2);
+  text-decoration: none;
+  padding: 3px 0;
+  transition: color 0.15s;
+}
+.toc-link:hover { color: var(--accent2); }
+
+h2.section {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 36px 0 16px;
+  padding-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h2.section::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  border-radius: 2px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+h3.subsection {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent2);
+  margin: 24px 0 10px;
+}
+
+p.body-text {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text2);
+  margin-bottom: 14px;
+}
+
+.quote-card {
+  background: rgba(59,130,246,0.06);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 14px;
+  font-style: italic;
+  color: var(--accent3);
+  line-height: 1.6;
+}
+
+.quote-author {
+  font-size: 11px;
+  font-style: normal;
+  color: var(--text3);
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.info-card {
+  background: rgba(16,185,129,0.06);
+  border: 1px solid rgba(16,185,129,0.2);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin: 16px 0;
+  font-size: 13px;
+  color: #6ee7b7;
+  line-height: 1.6;
+}
+
+.warn-card {
+  background: rgba(245,158,11,0.06);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin: 16px 0;
+  font-size: 13px;
+  color: var(--gold2);
+  line-height: 1.6;
+}
+
+.warn-card strong, .info-card strong { font-weight: 600; }
+
+/* TABLE */
+.table-wrap {
+  overflow-x: auto;
+  margin: 16px 0;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+thead tr {
+  background: rgba(59,130,246,0.15);
+}
+
+thead th {
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--accent3);
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--border);
+}
+
+tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: rgba(59,130,246,0.04); }
+
+tbody td {
+  padding: 10px 14px;
+  color: var(--text2);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+tbody td strong { color: var(--text); font-weight: 500; }
+
+/* TERM CARDS */
+.term-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.term-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  transition: border-color 0.2s;
+}
+
+.term-card:hover { border-color: var(--border2); }
+
+.term-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent2);
+  margin-bottom: 6px;
+}
+
+.term-def {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+/* LIST */
+ul.content-list {
+  list-style: none;
+  margin: 10px 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+ul.content-list li {
+  font-size: 13.5px;
+  color: var(--text2);
+  padding-left: 18px;
+  position: relative;
+  line-height: 1.5;
+}
+
+ul.content-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 12px;
+}
+
+ol.content-list {
+  list-style: none;
+  margin: 10px 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  counter-reset: item;
+}
+
+ol.content-list li {
+  font-size: 13.5px;
+  color: var(--text2);
+  padding-left: 28px;
+  position: relative;
+  line-height: 1.5;
+  counter-increment: item;
+}
+
+ol.content-list li::before {
+  content: counter(item);
+  position: absolute;
+  left: 0;
+  width: 20px; height: 20px;
+  background: rgba(59,130,246,0.15);
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 1px;
+}
+
+/* SDLC STEPS */
+.steps-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 16px 0;
+}
+
+.step-item {
+  display: flex;
+  gap: 16px;
+  position: relative;
+}
+
+.step-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 38px;
+  bottom: -8px;
+  width: 2px;
+  background: var(--border);
+}
+
+.step-num {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: rgba(59,130,246,0.15);
+  border: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--accent2);
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.step-content {
+  padding: 8px 0 24px;
+}
+
+.step-title { font-weight: 600; font-size: 14px; margin-bottom: 3px; }
+.step-desc { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+/* FLASHCARDS */
+#flashcards-page .fc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.flashcard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  perspective: 1000px;
+  min-height: 140px;
+  position: relative;
+  transition: border-color 0.2s, transform 0.1s;
+}
+
+.flashcard:hover { border-color: var(--border2); }
+.flashcard:active { transform: scale(0.98); }
+
+.fc-inner {
+  transition: transform 0.4s;
+  transform-style: preserve-3d;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 100px;
+}
+
+.flashcard.flipped .fc-inner { transform: rotateY(180deg); }
+
+.fc-front, .fc-back {
+  backface-visibility: hidden;
+  position: absolute;
+  width: 100%; top: 0;
+}
+
+.fc-back { transform: rotateY(180deg); }
+
+.fc-category {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.fc-q {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.fc-a {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+
+.fc-hint {
+  font-size: 10px;
+  color: var(--text3);
+  position: absolute;
+  bottom: 0; right: 0;
+}
+
+/* QUIZ */
+#quiz-page .quiz-container {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.quiz-progress {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+}
+
+.qp-dot {
+  flex: 1; height: 4px;
+  border-radius: 99px;
+  background: var(--border);
+  transition: background 0.3s;
+}
+.qp-dot.done { background: var(--green); }
+.qp-dot.active { background: var(--accent); }
+
+.quiz-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  margin-bottom: 16px;
+}
+
+.q-num { font-size: 12px; color: var(--text3); margin-bottom: 10px; }
+.q-text { font-size: 16px; font-weight: 600; line-height: 1.4; margin-bottom: 20px; }
+
+.q-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.q-opt {
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text2);
+  transition: all 0.15s;
+  text-align: left;
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  width: 100%;
+}
+
+.q-opt:hover { border-color: var(--accent); color: var(--text); background: rgba(59,130,246,0.06); }
+.q-opt.correct { border-color: var(--green); background: rgba(16,185,129,0.1); color: #6ee7b7; }
+.q-opt.wrong { border-color: var(--red); background: rgba(239,68,68,0.1); color: #fca5a5; }
+
+.q-explanation {
+  background: rgba(59,130,246,0.06);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--accent3);
+  line-height: 1.6;
+  margin-top: 12px;
+  display: none;
+}
+
+.quiz-score {
+  text-align: center;
+  padding: 40px;
+}
+
+.score-circle {
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  border: 4px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-family: 'Syne', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--accent2);
+}
+
+/* ── COMPARISON GRIDS ── */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.compare-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.compare-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.compare-item {
+  font-size: 13px;
+  color: var(--text2);
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+  line-height: 1.4;
+}
+.compare-item:last-child { border-bottom: none; }
+
+/* ── MOSCOW ── */
+.moscow-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.moscow-card {
+  border-radius: 10px;
+  padding: 16px;
+  border: 1px solid;
+}
+
+.m-must { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.25); }
+.m-must .m-label { color: #fca5a5; }
+.m-should { background: rgba(245,158,11,0.06); border-color: rgba(245,158,11,0.25); }
+.m-should .m-label { color: var(--gold2); }
+.m-could { background: rgba(59,130,246,0.06); border-color: rgba(59,130,246,0.25); }
+.m-could .m-label { color: var(--accent2); }
+.m-wont { background: rgba(100,116,139,0.06); border-color: rgba(100,116,139,0.25); }
+.m-wont .m-label { color: var(--text3); }
+
+.m-label { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px; margin-bottom: 4px; }
+.m-desc { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+/* ── POWER/INTEREST ── */
+.matrix-2x2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 8px;
+  margin: 16px 0;
+  height: 220px;
+}
+
+.m-cell {
+  border-radius: 10px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+
+.m-cell-title { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+.m-cell-desc { font-size: 11px; color: var(--text2); line-height: 1.4; }
+
+.m-tl { border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.04); }
+.m-tl .m-cell-title { color: var(--gold2); }
+.m-tr { border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.04); }
+.m-tr .m-cell-title { color: #f87171; }
+.m-bl { border-color: var(--border); }
+.m-bl .m-cell-title { color: var(--text3); }
+.m-br { border-color: rgba(59,130,246,0.3); background: rgba(59,130,246,0.04); }
+.m-br .m-cell-title { color: var(--accent2); }
+
+.matrix-labels {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  font-size: 11px;
+  color: var(--text3);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding-left: 0;
+}
+
+/* highlight */
+.hl { color: var(--accent2); font-weight: 500; }
+.hl-g { color: #6ee7b7; font-weight: 500; }
+.hl-y { color: var(--gold2); font-weight: 500; }
+.hl-r { color: #fca5a5; font-weight: 500; }
+
+code {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  background: var(--bg3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--cyan);
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
+
+/* ANIMATE */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.page.active { animation: fadeIn 0.3s ease; }
+
+/* HIGHLIGHT BOX */
+.highlight-box {
+  background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(6,182,212,0.06));
+  border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 20px 0;
+}
+
+.hb-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--accent2);
+  margin-bottom: 10px;
+}
+
+/* SDLC cost viz */
+.cost-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 6px 0;
+  font-size: 13px;
+}
+.cost-label { width: 100px; color: var(--text2); flex-shrink: 0; }
+.cost-bar-wrap { flex: 1; height: 20px; background: var(--bg3); border-radius: 4px; overflow: hidden; }
+.cost-bar { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 11px; font-weight: 600; color: white; }
+.cost-val { width: 50px; text-align: right; color: var(--text3); font-size: 12px; }
+
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">2025–2026 Bahar</div>
+    <div class="sidebar-title">Sistem Analizi<br>ve Tasarımı</div>
+    <div class="sidebar-sub">Sınav Çalışma Rehberi</div>
+  </div>
+  
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="İçerik ara..." oninput="searchContent(this.value)">
+  </div>
+  
+  <div class="nav-section">Genel</div>
+  <div class="nav-item active" onclick="showPage('home')">
+    <span>🏠</span> Ana Sayfa
+  </div>
+  <div class="nav-item" onclick="showPage('flashcards')">
+    <span>🃏</span> Flash Kartlar
+    <span class="nav-badge" style="background:rgba(59,130,246,0.15);color:var(--accent2)">28</span>
+  </div>
+  <div class="nav-item" onclick="showPage('quiz')">
+    <span>📝</span> Mini Sınav
+    <span class="nav-badge" style="background:rgba(16,185,129,0.15);color:#6ee7b7">20 S</span>
+  </div>
+  
+  <div class="nav-section" style="margin-top:8px">Haftalık Dersler</div>
+  
+  <div class="nav-item" onclick="showPage('w1')">
+    <span class="nav-dot" style="background:var(--w1)"></span> Hafta 1 — Giriş & Temel
+  </div>
+  <div class="nav-item" onclick="showPage('w2')">
+    <span class="nav-dot" style="background:var(--w2)"></span> Hafta 2 — Süreç Modelleri
+  </div>
+  <div class="nav-item" onclick="showPage('w3')">
+    <span class="nav-dot" style="background:var(--w3)"></span> Hafta 3 — Gereksinim Müh.
+  </div>
+  <div class="nav-item" onclick="showPage('w3b')">
+    <span class="nav-dot" style="background:var(--w3b)"></span> Hafta 3 — Problem Tanımı
+  </div>
+  <div class="nav-item" onclick="showPage('w5')">
+    <span class="nav-dot" style="background:var(--w5)"></span> Hafta 5 — Toplama Tekn.
+  </div>
+  
+  <div class="sidebar-footer">
+    <div class="progress-label">
+      <span>Çalışma İlerlemesi</span>
+      <span id="progressText">0%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main id="main">
+  <div class="topbar">
+    <div class="topbar-breadcrumb">
+      Sistem Analizi ve Tasarımı <span style="color:var(--text3)">›</span> <span id="breadcrumb">Ana Sayfa</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-ghost" onclick="showPage('flashcards')">🃏 Flash Kartlar</button>
+      <button class="btn btn-primary" onclick="showPage('quiz')">📝 Sınava Gir</button>
+    </div>
+  </div>
+
+  <!-- ══ HOME ══ -->
+  <div class="page active" id="home">
+    <div class="home-hero">
+      <div class="hero-eyebrow">Sınav Çalışma Rehberi</div>
+      <div class="hero-title">Sistem Analizi<br>ve Tasarımı</div>
+      <div class="hero-sub">Tüm ders notları, tablolar, kavramlar ve sınav soruları tek sayfada. Hazır mısın?</div>
+    </div>
+    
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num">5</div>
+        <div class="stat-lbl">Haftalık Ders</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">28</div>
+        <div class="stat-lbl">Flash Kart</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">20</div>
+        <div class="stat-lbl">Sınav Sorusu</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">42</div>
+        <div class="stat-lbl">Temel Kavram</div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="week-card w1" onclick="showPage('w1')">
+        <div class="card-week" style="color:var(--w1)">Hafta 1 — 24 Şubat 2026</div>
+        <div class="card-title">Derse Giriş ve Temel Kavramlar</div>
+        <div class="card-topics">
+          <span class="tag">Sistem Nedir?</span>
+          <span class="tag">Bilgi Sistemi</span>
+          <span class="tag">SDLC</span>
+          <span class="tag">UML</span>
+          <span class="tag">Proje Türleri</span>
+        </div>
+      </div>
+      <div class="week-card w2" onclick="showPage('w2')">
+        <div class="card-week" style="color:var(--w2)">Hafta 2 — 3 Mart 2026</div>
+        <div class="card-title">Süreç Modelleri ve Yaklaşımlar</div>
+        <div class="card-topics">
+          <span class="tag">Waterfall</span>
+          <span class="tag">V-Model</span>
+          <span class="tag">Agile</span>
+          <span class="tag">Scrum</span>
+          <span class="tag">Kanban</span>
+        </div>
+      </div>
+      <div class="week-card w3" onclick="showPage('w3')">
+        <div class="card-week" style="color:var(--w3)">Hafta 3 — 17 Mart 2026</div>
+        <div class="card-title">Gereksinim Mühendisliği</div>
+        <div class="card-topics">
+          <span class="tag">FR / NFR</span>
+          <span class="tag">SMART</span>
+          <span class="tag">MoSCoW</span>
+          <span class="tag">SRS</span>
+          <span class="tag">İzlenebilirlik</span>
+        </div>
+      </div>
+      <div class="week-card w3b" onclick="showPage('w3b')">
+        <div class="card-week" style="color:var(--w3b)">Hafta 3b — 17 Mart 2026</div>
+        <div class="card-title">Problem Tanımı ve İş Süreçleri</div>
+        <div class="card-topics">
+          <span class="tag">As-Is / To-Be</span>
+          <span class="tag">Gap Analizi</span>
+          <span class="tag">Paydaş</span>
+          <span class="tag">Swimlane</span>
+          <span class="tag">Kapsam</span>
+        </div>
+      </div>
+      <div class="week-card w5" onclick="showPage('w5')">
+        <div class="card-week" style="color:var(--w5)">Hafta 5 — 24 Mart 2026</div>
+        <div class="card-title">Gereksinim Toplama Teknikleri</div>
+        <div class="card-topics">
+          <span class="tag">Görüşme</span>
+          <span class="tag">Anket</span>
+          <span class="tag">Gözlem</span>
+          <span class="tag">Use Case</span>
+          <span class="tag">User Story</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="highlight-box">
+      <div class="hb-title">⚡ Sınavda Sık Çıkan Konular</div>
+      <ul class="content-list">
+        <li><strong>1:100 Kuralı</strong> — Gereksinim aşamasındaki hata üretimde 100 kat pahalıdır (IBM)</li>
+        <li><strong>SMART Gereksinim</strong> — Specific, Measurable, Achievable, Relevant, Time-bound</li>
+        <li><strong>MoSCoW</strong> — Must / Should / Could / Won't Have önceliklendirmesi</li>
+        <li><strong>As-Is vs To-Be</strong> — Mevcut vs Hedef süreç farkı ve gap analizi</li>
+        <li><strong>FR vs NFR</strong> — Ne yapar (fonksiyonel) vs Nasıl yapar (kalite)</li>
+        <li><strong>Scrum vs Kanban</strong> — Sprint tabanlı vs Akış tabanlı yönetim</li>
+        <li><strong>5 Neden Tekniği</strong> — Kök nedeni bulmak için ardışık "neden?" sorusu</li>
+        <li><strong>Use Case vs User Story</strong> — Waterfall vs Agile ortamlarında gereksinim belgesi</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══ HAFTA 1 ══ -->
+  <div class="page" id="w1">
+    <div class="page-header">
+      <div class="page-week" style="color:var(--w1)">■ Hafta 1</div>
+      <div class="page-title">Derse Giriş ve Temel Kavramlar</div>
+      <div class="page-date">24 Şubat 2026  ·  ~11 dk okuma</div>
+    </div>
+    
+    <div class="toc">
+      <div class="toc-title">İçindekiler</div>
+      <div class="toc-list">
+        <a class="toc-link" href="#w1-1">1.1 Sistem Nedir?</a>
+        <a class="toc-link" href="#w1-2">1.2 Bilgi Sistemi</a>
+        <a class="toc-link" href="#w1-3">1.3 Yazılım Sistemi</a>
+        <a class="toc-link" href="#w1-4">1.4 Analiz vs Tasarım</a>
+        <a class="toc-link" href="#w1-5">1.5 SDLC</a>
+        <a class="toc-link" href="#w1-6">1.6 Proje Türleri</a>
+        <a class="toc-link" href="#w1-7">1.7 Tarihsel Yolculuk</a>
+        <a class="toc-link" href="#w1-8">1.8 Temel Kavramlar</a>
+      </div>
+    </div>
+
+    <h2 class="section" id="w1-1">1.1 Sistem Nedir?</h2>
+    <p class="body-text">Eski Yunanca <span class="hl">σύστημα (systema)</span> sözcüğünden gelen bu terim, <em>"bir araya getirilmiş parçalar"</em> anlamına gelir.</p>
+    <div class="quote-card">
+      "Bütün, parçalarının toplamından fazladır."
+      <div class="quote-author">— Aristoteles, Metafizik, M.Ö. ~350</div>
+    </div>
+    <p class="body-text">1968'de <span class="hl">Ludwig von Bertalanffy</span>, Genel Sistem Teorisi'ni yayımladı. Bu teoriye göre canlı organizmalar, toplumlar, makineler — hepsi <em>açık sistemlerdir</em>; çevrelerinden enerji, madde veya bilgi alarak varlıklarını sürdürürler.</p>
+    
+    <h3 class="subsection">Sistem Bileşenleri</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Bileşen</th><th>Açıklama</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Girdi (Input)</strong></td><td>Sistemin dışarıdan aldığı veriler, komutlar, kaynaklar</td></tr>
+          <tr><td><strong>İşlem (Process)</strong></td><td>Girdileri çıktılara dönüştüren adımlar</td></tr>
+          <tr><td><strong>Çıktı (Output)</strong></td><td>Sistemin ürettiği sonuçlar, raporlar, eylemler</td></tr>
+          <tr><td><strong>Geri Bildirim (Feedback)</strong></td><td>Çıktıların sistemi düzeltmek için yeniden girdi olarak döndürülmesi</td></tr>
+          <tr><td><strong>Sınır (Boundary)</strong></td><td>Sistemin nerede bitip dış dünyanın nerede başladığının tanımı</td></tr>
+          <tr><td><strong>Çevre (Environment)</strong></td><td>Sistemin içinde bulunduğu dış ortam</td></tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <h3 class="subsection">Sistem Türleri</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tür</th><th>Örnekler</th></tr></thead>
+        <tbody>
+          <tr><td>Fiziksel Sistem</td><td>Fabrika üretim hattı, bina ısıtma sistemi</td></tr>
+          <tr><td>Soyut Sistem</td><td>Matematiksel model, algoritma, iş süreci</td></tr>
+          <tr><td>Açık Sistem</td><td>Web uygulaması, API entegrasyonu</td></tr>
+          <tr><td>Kapalı Sistem</td><td>Gömülü yazılım (çevre ile sınırlı etkileşim)</td></tr>
+          <tr><td>İnsan-Makine Sistemi</td><td>Hastane yönetim yazılımı, ERP sistemi</td></tr>
+          <tr><td>Sosyo-teknik Sistem</td><td>Organizasyon + yazılım + insanların bütünü</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section" id="w1-2">1.2 Bilgi Sistemi</h2>
+    <div class="quote-card">
+      "Bilgi sistemi; bir örgütte karar almayı, koordinasyonu, kontrolü, analizi ve görselleştirmeyi desteklemek amacıyla bilgi toplayan, işleyen, saklayan ve dağıtan birbiriyle ilişkili bileşenler kümesidir."
+      <div class="quote-author">— Laudon & Laudon, Management Information Systems, 16. Baskı, 2023</div>
+    </div>
+    <p class="body-text">Laudon & Laudon modeline göre bilgi sisteminin 3 boyutu: <span class="hl">Organizasyon</span> (iş süreçleri, hiyerarşi, kültür), <span class="hl">Yönetim</span> (stratejik kararlar), <span class="hl">Teknoloji</span> (donanım, yazılım, ağ).</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Sistem Türü</th><th>İşlevi</th><th>Örnek</th></tr></thead>
+        <tbody>
+          <tr><td><strong>TPS</strong> — İşlem İşleme</td><td>Günlük operasyonlar</td><td>POS cihazı, bordro</td></tr>
+          <tr><td><strong>MIS</strong> — Yönetim Bilgi</td><td>Orta yönetim raporları</td><td>Satış özeti, stok raporu</td></tr>
+          <tr><td><strong>DSS</strong> — Karar Destek</td><td>Yarı yapılandırılmış kararlar</td><td>Fiyatlandırma modeli</td></tr>
+          <tr><td><strong>ESS</strong> — Yönetici Destek</td><td>Üst yönetim panoları</td><td>Trend analizleri</td></tr>
+          <tr><td><strong>ERP</strong> — Kurumsal Kaynak</td><td>Tüm departmanları entegre</td><td>SAP, Oracle</td></tr>
+          <tr><td><strong>CRM</strong> — Müşteri İlişkileri</td><td>Müşteri verisi merkezi</td><td>Salesforce, HubSpot</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section" id="w1-3">1.3 Yazılım Sistemi</h2>
+    <p class="body-text">Belirli bir problemi çözmek üzere tasarlanmış, birbirleriyle etkileşen yazılım bileşenleri (modüller, servisler, kütüphaneler, veritabanları) bütünüdür.</p>
+    <div class="quote-card">
+      "Büyük yazılım projelerinde özgünlük (essence) ve kazara oluşan karmaşıklık (accidental complexity) iç içe geçer. Gümüş kurşun yoktur."
+      <div class="quote-author">— Fred Brooks, The Mythical Man-Month, 1975</div>
+    </div>
+    <p class="body-text">IEEE 1471-2000'e göre yazılım sistemi: belirli bir <strong>amaca</strong> hizmet eder, <strong>çevresiyle</strong> etkileşimdedir, bir veya birden fazla <strong>paydaşın</strong> ilgisini çeker, bir <strong>mimari</strong> üzerinde inşa edilir.</p>
+
+    <h2 class="section" id="w1-4">1.4 Sistem Analizi vs Tasarımı</h2>
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="compare-label" style="color:var(--accent2)">📋 Sistem Analizi</div>
+        <div class="compare-item">Soru: <strong>Ne yapılmalı? (What)</strong></div>
+        <div class="compare-item">Problem odaklı</div>
+        <div class="compare-item">Kullanıcı perspektifi</div>
+        <div class="compare-item">Gereksinim dokümanı üretir</div>
+        <div class="compare-item">Sorunları ortaya koyar</div>
+      </div>
+      <div class="compare-card">
+        <div class="compare-label" style="color:var(--green)">🏗️ Sistem Tasarımı</div>
+        <div class="compare-item">Soru: <strong>Nasıl yapılmalı? (How)</strong></div>
+        <div class="compare-item">Çözüm odaklı</div>
+        <div class="compare-item">Geliştirici perspektifi</div>
+        <div class="compare-item">Mimari/tasarım dokümanı üretir</div>
+        <div class="compare-item">Sorunlara çözüm sunar</div>
+      </div>
+    </div>
+    <div class="quote-card">
+      "İyi bir analist, kullanıcının söylediklerinin ötesine geçerek ne kastettiğini, hatta söylemediği şeyleri bile anlayabilen kişidir."
+      <div class="quote-author">— Ian Sommerville, Software Engineering, 10. Baskı, 2016</div>
+    </div>
+
+    <h2 class="section" id="w1-5">1.5 SDLC — Yazılım Geliştirme Yaşam Döngüsü</h2>
+    <p class="body-text">Kavramın resmi olarak gündeme gelmesi 1960'lara dayanır. 1970'lerde Winston Royce, "Waterfall Modeli" olarak bilinen yapıyı tanımladı.</p>
+    
+    <div class="steps-flow">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Planlama (Planning)</div>
+          <div class="step-desc">Projenin fizibilite analizi, kaynak planı, zaman tahmini.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Analiz (Analysis)</div>
+          <div class="step-desc">Gereksinimlerin toplanması ve belgelenmesi.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Tasarım (Design)</div>
+          <div class="step-desc">Sistem mimarisi, veri modeli, arayüz tasarımı.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Geliştirme / Kodlama (Implementation)</div>
+          <div class="step-desc">Kaynak kodun yazılması.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-title">Test (Testing)</div>
+          <div class="step-desc">Hata tespiti, doğrulama ve geçerleme.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <div class="step-title">Dağıtım (Deployment)</div>
+          <div class="step-desc">Sistemin canlı ortama alınması.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <div class="step-title">Bakım (Maintenance)</div>
+          <div class="step-desc">Hata düzeltme, geliştirme, güncelleme.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="subsection">⚡ SDLC Maliyeti — Hata Ne Zaman Düzeltilir?</h3>
+    <div class="cost-row"><div class="cost-label">Gereksinim</div><div class="cost-bar-wrap"><div class="cost-bar" style="width:5%;background:#10b981">1x</div></div><div class="cost-val">1x</div></div>
+    <div class="cost-row"><div class="cost-label">Tasarım</div><div class="cost-bar-wrap"><div class="cost-bar" style="width:25%;background:#3b82f6">5x</div></div><div class="cost-val">5x</div></div>
+    <div class="cost-row"><div class="cost-label">Kodlama</div><div class="cost-bar-wrap"><div class="cost-bar" style="width:50%;background:#8b5cf6">10x</div></div><div class="cost-val">10x</div></div>
+    <div class="cost-row"><div class="cost-label">Test</div><div class="cost-bar-wrap"><div class="cost-bar" style="width:70%;background:#f59e0b">20x</div></div><div class="cost-val">20x</div></div>
+    <div class="cost-row"><div class="cost-label">Üretim</div><div class="cost-bar-wrap"><div class="cost-bar" style="width:100%;background:#ef4444">100x</div></div><div class="cost-val">100x</div></div>
+    
+    <div class="warn-card" style="margin-top:16px"><strong>📊 Rakamlarla SDLC:</strong> Standish Group 2020 — Yazılım projelerinin yalnızca <strong>%31'i</strong> bütçe ve zamana uygun teslim edilir. McKinsey 2022 — Büyük teknoloji projelerinin <strong>%45'i</strong> bütçesini aşıyor, <strong>%7'si</strong> hiç tamamlanamıyor.</div>
+
+    <h2 class="section" id="w1-6">1.6 Proje Türleri</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tür</th><th>Tech Stack</th><th>Kritik Analiz Boyutu</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Web</strong></td><td>HTML/CSS/JS, Node.js/Python, SQL/NoSQL</td><td>Kullanıcı akışları, API tasarımı, SEO/performans</td></tr>
+          <tr><td><strong>Mobil</strong></td><td>Swift/Kotlin, Flutter/React Native</td><td>Cihaz kısıtları, UX pattern'leri, çevrimdışı çalışma</td></tr>
+          <tr><td><strong>Masaüstü</strong></td><td>Windows/macOS/Linux</td><td>İşletim sistemi entegrasyonu, offline veri</td></tr>
+          <tr><td><strong>Kurumsal</strong></td><td>SAP, Oracle, Dynamics 365</td><td>Süreç entegrasyonu, yetkilendirme, ölçeklenebilirlik</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section" id="w1-7">1.7 Tarihsel Yolculuk</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Dönem</th><th>Gelişme</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1950–60'lar</strong></td><td>İlk büyük iş sistemleri; COBOL, batch processing</td></tr>
+          <tr><td><strong>1970'ler</strong></td><td>Royce'un Waterfall makalesi; yapısal analiz (DFD)</td></tr>
+          <tr><td><strong>1980'ler</strong></td><td>Nesne yönelimli düşünce; OMT, Booch notasyonu</td></tr>
+          <tr><td><strong>1990'lar</strong></td><td>UML standardı — Booch, Rumbaugh, Jacobson ("Üç Amigo")</td></tr>
+          <tr><td><strong>2000'ler</strong></td><td>Agile Manifesto (2001); Scrum, XP yaygınlaşması</td></tr>
+          <tr><td><strong>2010'lar</strong></td><td>DevOps, CI/CD; mikro servis mimarisi</td></tr>
+          <tr><td><strong>2020'ler</strong></td><td>AI destekli geliştirme araçları; low-code/no-code platformları</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section" id="w1-8">1.8 Temel Kavramlar Sözlüğü</h2>
+    <div class="term-grid">
+      <div class="term-card"><div class="term-name">Sistem</div><div class="term-def">Ortak bir amaç için birlikte çalışan birbiriyle ilişkili bileşenler bütünü</div></div>
+      <div class="term-card"><div class="term-name">Bilgi Sistemi</div><div class="term-def">Veri toplayan, işleyen, saklayan ve dağıtan örgütsel altyapı</div></div>
+      <div class="term-card"><div class="term-name">SDLC</div><div class="term-def">Yazılım Geliştirme Yaşam Döngüsü — planlama'dan bakıma uzanan süreç</div></div>
+      <div class="term-card"><div class="term-name">Paydaş (Stakeholder)</div><div class="term-def">Sistemden etkilenen veya sistemi etkileyen her birey ya da grup</div></div>
+      <div class="term-card"><div class="term-name">Kapsam (Scope)</div><div class="term-def">Sistemin neyi kapsayıp neyi kapsamadığının tanımı</div></div>
+      <div class="term-card"><div class="term-name">UML</div><div class="term-def">Yazılım sistemlerini modellemeye yarayan Birleşik Modelleme Dili</div></div>
+      <div class="term-card"><div class="term-name">Emergent Properties</div><div class="term-def">Parçaların birleşiminden ortaya çıkan, tek tek parçalarda bulunmayan özellikler</div></div>
+      <div class="term-card"><div class="term-name">Sosyo-teknik Sistem</div><div class="term-def">İnsan, süreç ve teknolojinin bütünleştiği karma sistem türü</div></div>
+    </div>
+  </div>
+
+  <!-- ══ HAFTA 2 ══ -->
+  <div class="page" id="w2">
+    <div class="page-header">
+      <div class="page-week" style="color:var(--w2)">■ Hafta 2</div>
+      <div class="page-title">Süreç Modelleri ve Yaklaşımlar</div>
+      <div class="page-date">3 Mart 2026  ·  ~5 dk okuma</div>
+    </div>
+    <div class="quote-card">
+      "The major fallacy is that software development is a purely technical activity."
+      <div class="quote-author">— Barry W. Boehm</div>
+    </div>
+    
+    <h2 class="section">Neden Süreç Modeli?</h2>
+    <p class="body-text">1968 NATO Konferansı'nda ortaya çıkan <span class="hl">"software crisis"</span> kavramı, yazılım üretiminin bireysel usta işinden kurumsal mühendislik disiplinine geçmesi gerektiğini gösterdi. Süreç modelleri; <strong>tahmin edilebilirlik, izlenebilirlik, kalite güvence ve risk azaltma</strong> amacıyla doğdu.</p>
+
+    <h2 class="section">Waterfall (Şelale) Modeli</h2>
+    <p class="body-text">Aşamalar lineer ilerler. Bir aşamanın çıktısı, bir sonrakinin girdisidir.</p>
+    <div class="steps-flow">
+      <div class="step-item"><div class="step-num" style="border-color:var(--w2);color:var(--w2)">1</div><div class="step-content"><div class="step-title">Gereksinim Analizi</div></div></div>
+      <div class="step-item"><div class="step-num" style="border-color:var(--w2);color:var(--w2)">2</div><div class="step-content"><div class="step-title">Sistem Tasarımı</div></div></div>
+      <div class="step-item"><div class="step-num" style="border-color:var(--w2);color:var(--w2)">3</div><div class="step-content"><div class="step-title">Ayrıntılı Tasarım</div></div></div>
+      <div class="step-item"><div class="step-num" style="border-color:var(--w2);color:var(--w2)">4</div><div class="step-content"><div class="step-title">Geliştirme (Kodlama)</div></div></div>
+      <div class="step-item"><div class="step-num" style="border-color:var(--w2);color:var(--w2)">5</div><div class="step-content"><div class="step-title">Test</div></div></div>
+      <div class="step-item"><div class="step-num" style="border-color:var(--w2);color:var(--w2)">6</div><div class="step-content"><div class="step-title">Dağıtım</div></div></div>
+      <div class="step-item"><div class="step-num" style="border-color:var(--w2);color:var(--w2)">7</div><div class="step-content"><div class="step-title">Bakım</div></div></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>Waterfall</th></tr></thead>
+        <tbody>
+          <tr><td>Uygun Alan</td><td>Savunma, medikal, havacılık, kamu ihale projeleri</td></tr>
+          <tr><td>Güçlü Yönler</td><td>Yönetmesi kolay; kilometre taşları net; sözleşmeye bağlanabilir</td></tr>
+          <tr><td>Zayıf Yönler</td><td>Erken hata geç patlar; değişime dirençli; kullanıcı ürünü geç görür</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="quote-card">
+      "A primary source of difficulty is that the customer does not know what he wants."
+      <div class="quote-author">— Fred Brooks, The Mythical Man-Month</div>
+    </div>
+
+    <h2 class="section">V-Model</h2>
+    <p class="body-text">Waterfall'ın test disiplinini kuvvetlendiren versiyonudur. Her geliştirme adımının bir test karşılığı olmalıdır.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Geliştirme Adımı</th><th>Karşılık Gelen Test</th></tr></thead>
+        <tbody>
+          <tr><td>Gereksinim Analizi</td><td><strong>Kabul Testi (UAT)</strong></td></tr>
+          <tr><td>Sistem Tasarımı</td><td><strong>Sistem Testi</strong></td></tr>
+          <tr><td>Mimari Tasarım</td><td><strong>Entegrasyon Testi</strong></td></tr>
+          <tr><td>Modül Tasarımı</td><td><strong>Birim Testi (Unit Test)</strong></td></tr>
+          <tr><td colspan="2" style="text-align:center;color:var(--w2);font-weight:600">▼ Kodlama (V tabanı) ▼</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="info-card">
+      <strong>Verification vs Validation:</strong><br>
+      • <strong>Verification:</strong> "Doğru ürünü mü geliştiriyoruz?" — tasarım gereksinimlerle uyuşuyor mu?<br>
+      • <strong>Validation:</strong> "Geliştirdiğimiz ürün doğru mu çalışıyor?" — kullanıcı ihtiyaçlarını karşılıyor mu?
+    </div>
+
+    <h2 class="section">Prototipleme Modeli</h2>
+    <p class="body-text">Gereksinimler sisliyse yapılacak en iyi şey: <span class="hl">göster, konuş, düzelt.</span></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tür</th><th>Açıklama</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Throw-away</strong></td><td>Keşif için üretilir, ürün olmaz. Atılabilir.</td></tr>
+          <tr><td><strong>Evolutionary</strong></td><td>Evrilerek gerçek ürüne dönüşür.</td></tr>
+          <tr><td><strong>Horizontal</strong></td><td>Arayüz akışını genişçe gösterir (derinlik az).</td></tr>
+          <tr><td><strong>Vertical</strong></td><td>Belirli bir özelliği uçtan uca çalıştırır (derinlik fazla).</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="warn-card"><strong>⚠️ Tuzak:</strong> Prototip teknik borçla üretildiyse onu direkt ürüne çevirmek kaliteyi gömer. Prototipin amacı ve türü (atılabilir mi? evrimsel mi?) en başta yazılmalıdır.</div>
+
+    <h2 class="section">Agile Felsefesi</h2>
+    <p class="body-text">Agile, "plansızlık" değil; planı kısa çevrimlerle sürekli güncelleyebilen bir çalışma biçimidir.</p>
+    <div class="quote-card">
+      "Responding to change over following a plan." — Bu cümle "plan yapma" demiyor; "planı putlaştırma" diyor.
+      <div class="quote-author">— Agile Manifesto, 2001</div>
+    </div>
+    <div class="info-card">
+      <strong>Agile Manifesto'nun 4 Değeri:</strong><br>
+      1. Bireyler ve etkileşimler → Süreçler ve araçlardan önce<br>
+      2. Çalışan yazılım → Kapsamlı dokümantasyondan önce<br>
+      3. Müşteri iş birliği → Sözleşme pazarlığından önce<br>
+      4. Değişime yanıt → Bir planı takip etmekten önce
+    </div>
+
+    <h2 class="section">Scrum</h2>
+    <p class="body-text">Scrum bir çerçevedir; metodoloji kitabı değildir. Zaman kutulu (time-boxed) çevik yönetim yaklaşımıdır.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Bileşen</th><th>Açıklama</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Roller</strong></td><td>Product Owner (iş değeri), Scrum Master (akış koruyucu), Geliştirme Ekibi</td></tr>
+          <tr><td><strong>Olaylar</strong></td><td>Sprint Planning, Daily Scrum, Sprint Review, Sprint Retrospective</td></tr>
+          <tr><td><strong>Artefaktlar</strong></td><td>Product Backlog, Sprint Backlog, Increment</td></tr>
+          <tr><td><strong>Sprint Süresi</strong></td><td>Genellikle 1-4 hafta (sabit)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section">Kanban</h2>
+    <p class="body-text">Kanban'ın ana sorusu: <span class="hl">"İş akışımız nerede tıkanıyor?"</span></p>
+    <div class="quote-card">
+      "Stop starting, start finishing."
+      <div class="quote-author">— Kanban topluluklarında yaygın ilke</div>
+    </div>
+    <ul class="content-list">
+      <li>İşi görselleştir (pano üzerinde)</li>
+      <li>WIP (Work In Progress) limiti koy — eş zamanlı iş sayısını sınırla</li>
+      <li>Akışı ölç — Cycle time, Throughput</li>
+      <li>Sürekli iyileştir</li>
+    </ul>
+
+    <h2 class="section">Scrum vs Kanban Karşılaştırması</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Kriter</th><th>Scrum</th><th>Kanban</th></tr></thead>
+        <tbody>
+          <tr><td>Zaman yapısı</td><td>Sprint (sabit periyot)</td><td>Sürekli akış</td></tr>
+          <tr><td>Planlama</td><td>Sprint başında yoğun</td><td>Sürekli öncelik güncelleme</td></tr>
+          <tr><td>Değişiklik yönetimi</td><td>Sprint içinde sınırlı</td><td>Daha esnek</td></tr>
+          <tr><td>Ölçüm</td><td>Velocity, sprint hedefi</td><td>Cycle time, throughput</td></tr>
+          <tr><td>Uygun senaryo</td><td>Ürün geliştirme</td><td>Operasyon + bakım + destek</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="info-card"><strong>Hibrit:</strong> Scrumban — Scrum'ın zaman kutuları ile Kanban'ın akış yönetimini birleştirir.</div>
+
+    <h2 class="section">İteratif vs Artımlı</h2>
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="compare-label" style="color:var(--cyan)">İteratif</div>
+        <div class="compare-item">Aynı çözümü tekrar tekrar iyileştirmek</div>
+        <div class="compare-item">Örnek: "Bildirim modülü 3 tur geri bildirimle iyileştirildi"</div>
+      </div>
+      <div class="compare-card">
+        <div class="compare-label" style="color:var(--purple)">Artımlı (Incremental)</div>
+        <div class="compare-item">Ürünü parça parça büyütmek</div>
+        <div class="compare-item">Örnek: "Bildirim modülü eklendi"</div>
+      </div>
+    </div>
+
+    <h2 class="section">Model Seçimi Rehberi</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Durum</th><th>Önerilen Model</th></tr></thead>
+        <tbody>
+          <tr><td>Net gereksinim + yüksek uyumluluk ihtiyacı</td><td><strong>Waterfall / V-Model</strong></td></tr>
+          <tr><td>Belirsiz ihtiyaç + yoğun kullanıcı etkileşimi</td><td><strong>Prototipleme + Agile</strong></td></tr>
+          <tr><td>Sürekli akışlı bakım/operasyon</td><td><strong>Kanban</strong></td></tr>
+          <tr><td>Ürün odaklı çevik teslimat</td><td><strong>Scrum</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="quote-card">
+      "Plans are useless, but planning is indispensable."
+      <div class="quote-author">— Dwight D. Eisenhower</div>
+    </div>
+  </div>
+
+  <!-- ══ HAFTA 3 — GEREKSİNİM MÜHENDİSLİĞİ ══ -->
+  <div class="page" id="w3">
+    <div class="page-header">
+      <div class="page-week" style="color:var(--w3)">■ Hafta 3</div>
+      <div class="page-title">Gereksinim Mühendisliği: Yazılımın DNA'sı</div>
+      <div class="page-date">17 Mart 2026  ·  ~11 dk okuma</div>
+    </div>
+    <div class="quote-card">
+      "Gereksinimler, bir sistemin paydaşlarının ihtiyaçlarını karşılayacak şekilde davranışını, özelliklerini veya kısıtlarını tanımlayan koşullardır."
+      <div class="quote-author">— IEEE Standard 729-1983</div>
+    </div>
+
+    <h2 class="section">1. Gereksinim Nedir? — 1:100 Kuralı</h2>
+    <p class="body-text">Gereksinim aşamasında bir hatayı bulmak 1 saat sürüyorsa, aynı hata üretimde <span class="hl-r">100 saat</span> alır.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Kaynak</th><th>Bulgu</th></tr></thead>
+        <tbody>
+          <tr><td><strong>IBM Araştırması</strong></td><td>Üretimde düzeltilen hata: gereksinim aşamasının <strong>100 katı</strong> pahalı (1:100 Kuralı)</td></tr>
+          <tr><td><strong>Standish Group 2020</strong></td><td>Proje başarısızlıklarının <strong>%37'si</strong> yetersiz gereksinim analizinden</td></tr>
+          <tr><td><strong>NIST</strong></td><td>ABD'de yazılım hatalarının ekonomik maliyeti yılda <strong>59,5 milyar dolar</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section">2. Gereksinim Türleri</h2>
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="compare-label" style="color:var(--w3)">✅ Fonksiyonel (FR)</div>
+        <div class="compare-item">Sistemin <strong>ne yapacağını</strong> tanımlar</div>
+        <div class="compare-item">İşlevleri, eylemleri, davranışları kapsar</div>
+        <div class="compare-item">Örnek: "Kullanıcı e-posta ile giriş yapabilmeli"</div>
+        <div class="compare-item">Her FR → Girdi + İşlem + Çıktı üçlüsü</div>
+      </div>
+      <div class="compare-card">
+        <div class="compare-label" style="color:var(--w3b)">⚡ Fonksiyonel Olmayan (NFR)</div>
+        <div class="compare-item">Sistemin <strong>nasıl çalışacağını</strong> tanımlar</div>
+        <div class="compare-item">Kalite özelliklerini kapsar ("-ilities")</div>
+        <div class="compare-item">Örnek: "Sayfa 2 saniyede yüklenmelidir"</div>
+        <div class="compare-item">Çoğu zaman FR'den daha kritiktir!</div>
+      </div>
+    </div>
+    <div class="quote-card">
+      "Fonksiyonel olmayan gereksinimler, çoğu zaman fonksiyonel gereksinimlerden daha kritiktir. Bir sistem doğru işi yapabilir; ama yavaş, güvensiz ya da kullanılamaz olduğunda başarısız sayılır."
+      <div class="quote-author">— Ian Sommerville, Software Engineering, 10. Baskı</div>
+    </div>
+    
+    <h3 class="subsection">NFR Kategorileri</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Kategori</th><th>Örnek (Ölçülebilir)</th><th>Neden Önemli?</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Performans</strong></td><td>Sayfa yüklenme < 2 saniye (95. yüzdelik)</td><td>3 sn+ yükleme kullanıcıların %53'ünü kaybettirir</td></tr>
+          <tr><td><strong>Güvenilirlik</strong></td><td>%99,9 uptime (≈ 8,7 saat kesinti/yıl)</td><td>E-ticarette 1 saat kesinti = binlerce TL kayıp</td></tr>
+          <tr><td><strong>Güvenlik</strong></td><td>Parolalar bcrypt (salt rounds ≥ 12) ile hashlenmelidir</td><td>Düz metin şifre = ihlalde tüm veriler çalınır</td></tr>
+          <tr><td><strong>Ölçeklenebilirlik</strong></td><td>Eş zamanlı 10.000 kullanıcı desteği</td><td>Başarılı lansman hazırlıksız sistemi çökertir</td></tr>
+          <tr><td><strong>Kullanılabilirlik</strong></td><td>Yeni kullanıcı 5 dk'da temel işlemi tamamlar</td><td>Karmaşık arayüz = kullanıcı alternatife gider</td></tr>
+          <tr><td><strong>Bakım Yapılabilirlik</strong></td><td>Birim test kapsamı %80+</td><td>Bakımı zor kod 2 yılda teknik borca dönüşür</td></tr>
+          <tr><td><strong>Taşınabilirlik</strong></td><td>Chrome, Firefox, Safari son 2 sürümünde çalışmalı</td><td>Tek tarayıcıya bağımlılık = kullanıcı kaybı</td></tr>
+          <tr><td><strong>Erişilebilirlik</strong></td><td>WCAG 2.1 AA standardına uyum</td><td>Yasal zorunluluk (AB) + etik sorumluluk</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section">3. Gereksinim Hiyerarşisi (Piramit)</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Katman</th><th>Soru</th><th>Hedef Kitle</th><th>Örnek</th></tr></thead>
+        <tbody>
+          <tr><td><strong>İş Gereksinimleri</strong></td><td>NEDEN?</td><td>Yöneticiler, sponsorlar</td><td>"İşlem hacminin %50'si 12 ayda platform üzerinden"</td></tr>
+          <tr><td><strong>Kullanıcı Gereksinimleri</strong></td><td>NE?</td><td>Son kullanıcılar, analistler</td><td>"Satıcı ürünlerini platforma ekleyebilmeli"</td></tr>
+          <tr><td><strong>Sistem Gereksinimleri</strong></td><td>NASIL?</td><td>Geliştiriciler, mimarlar</td><td>"POST /api/products → 201 Created"</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section">4. SMART Gereksinim Yazımı</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Harf</th><th>Kriter</th><th>Soru</th></tr></thead>
+        <tbody>
+          <tr><td><span class="hl" style="font-size:16px;font-weight:700">S</span></td><td><strong>Specific</strong> (Özgül)</td><td>"Tam olarak ne?"</td></tr>
+          <tr><td><span class="hl" style="font-size:16px;font-weight:700">M</span></td><td><strong>Measurable</strong> (Ölçülebilir)</td><td>"Nasıl doğrulayacağız?"</td></tr>
+          <tr><td><span class="hl" style="font-size:16px;font-weight:700">A</span></td><td><strong>Achievable</strong> (Erişilebilir)</td><td>"Yapabilir miyiz?"</td></tr>
+          <tr><td><span class="hl" style="font-size:16px;font-weight:700">R</span></td><td><strong>Relevant</strong> (İlgili)</td><td>"Bu neden gerekli?"</td></tr>
+          <tr><td><span class="hl" style="font-size:16px;font-weight:700">T</span></td><td><strong>Time-bound</strong> (Zamanlı)</td><td>"Ne zaman hazır?"</td></tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <h3 class="subsection">Kötü vs İyi Gereksinim</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>❌ Kötü</th><th>Sorun</th><th>✅ İyi (SMART)</th></tr></thead>
+        <tbody>
+          <tr><td>"Sistem hızlı olmalı"</td><td>"Hızlı" belirsiz</td><td>"Arama sonuçları 500ms içinde sunulmalı (95. yüzdelik dilim)"</td></tr>
+          <tr><td>"Sistem güvenli olmalı"</td><td>Subjektif</td><td>"Parolalar min 8 karakter, bcrypt (rounds=12) ile hashlenmelidir"</td></tr>
+          <tr><td>"Kullanıcı dostu olmalı"</td><td>Tamamen subjektif</td><td>"Yeni kullanıcı herhangi bir eğitim almaksızın ilk ilanı 5 dk'da oluşturabilmeli"</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="warn-card"><strong>🥒 "Salatalık Gereksinimi":</strong> Dışarıdan yeşil ve taze görünür ama içi boştur. "Sistem kullanıcı dostu olmalı" gibi ifadeler gereksinim değil <strong>dilektir</strong>. Herkes farklı anlar, kimse test edemez.</div>
+
+    <h2 class="section">5. MoSCoW Önceliklendirme</h2>
+    <p class="body-text">Dai Clegg ve Richard Barker tarafından geliştirilen bu teknik gereksinimleri dört kategoriye ayırır. <strong>Must Have gereksinimleri toplam listenin %60'ını geçmemelidir.</strong></p>
+    <div class="moscow-grid">
+      <div class="moscow-card m-must">
+        <div class="m-label">M — Must Have</div>
+        <div class="m-desc">Olmazsa olmaz. Olmadan sistem değer taşımaz.<br><em>Örnek: Giriş/çıkış, ilan oluşturma</em></div>
+      </div>
+      <div class="moscow-card m-should">
+        <div class="m-label">S — Should Have</div>
+        <div class="m-desc">Önemli ama zorunlu değil. Mümkünse olmalı.<br><em>Örnek: E-posta bildirimi, yorumlar</em></div>
+      </div>
+      <div class="moscow-card m-could">
+        <div class="m-label">C — Could Have</div>
+        <div class="m-desc">Güzel olur. Zaman/bütçe kalırsa eklenir.<br><em>Örnek: Dark mode, favoriler</em></div>
+      </div>
+      <div class="moscow-card m-wont">
+        <div class="m-label">W — Won't Have</div>
+        <div class="m-desc">Bu sürümde yok. İleride değerlendirilebilir.<br><em>Örnek: Ödeme sistemi, mobil uygulama</em></div>
+      </div>
+    </div>
+
+    <h2 class="section">6. Gereksinim İzlenebilirliği</h2>
+    <p class="body-text">Her gereksinimin hangi iş hedefinden kaynaklandığını, hangi tasarım kararlarıyla karşılandığını ve hangi test senaryolarıyla doğrulandığını takip etme yeteneğidir.</p>
+    <ul class="content-list">
+      <li><strong>İleri izlenebilirlik (forward):</strong> Gereksinim → Tasarım → Kod → Test</li>
+      <li><strong>Geri izlenebilirlik (backward):</strong> Test → Kod → Tasarım → Gereksinim</li>
+    </ul>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ID</th><th>Gereksinim</th><th>Use Case</th><th>Test Senaryosu</th></tr></thead>
+        <tbody>
+          <tr><td><code>FR-01</code></td><td>Kullanıcı giriş yapabilmeli</td><td>UC-001</td><td>TS-001, TS-002</td></tr>
+          <tr><td><code>FR-02</code></td><td>Ürün ilanı oluşturulabilmeli</td><td>UC-003</td><td>TS-005, TS-006</td></tr>
+          <tr><td><code>NFR-01</code></td><td>Sayfa yüklenme < 2 saniye</td><td>—</td><td>TS-P001</td></tr>
+          <tr><td><code>NFR-02</code></td><td>Parolalar bcrypt ile hashlenmelidir</td><td>—</td><td>TS-S001</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="warn-card"><strong>⚠️ Matristeki boş hücre tehlike işaretidir.</strong> Gereksinim karşısında test yoksa → asla doğrulanmayacak. Test karşısında gereksinim yoksa → gereksiz test olabilir.</div>
+
+    <h2 class="section">7. SRS Belgesi (IEEE 830)</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>§</th><th>Bölüm</th><th>İçerik</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>Giriş</strong></td><td>Amaç, kapsam, tanımlar, kısaltmalar, genel bakış</td></tr>
+          <tr><td>2</td><td><strong>Genel Açıklama</strong></td><td>Ürün perspektifi, işlevler, kullanıcı grupları, kısıtlar, varsayımlar</td></tr>
+          <tr><td>3</td><td><strong>Özel Gereksinimler</strong></td><td>Fonksiyonel gereksinimler, NFR'ler, dış arayüz gereksinimleri</td></tr>
+          <tr><td>Ek A</td><td><strong>Veri Sözlüğü</strong></td><td>Sistemde kullanılan kavram ve veri tiplerinin tanımları</td></tr>
+          <tr><td>Ek B</td><td><strong>Modeller</strong></td><td>Use case diyagramları, ER diyagramları, prototip ekranlar</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Geleneksel (Waterfall)</th><th>Agile</th></tr></thead>
+        <tbody>
+          <tr><td>SRS belgesi</td><td>Product Backlog</td></tr>
+          <tr><td>Gereksinim maddesi</td><td>User Story</td></tr>
+          <tr><td>Test planı</td><td>Acceptance Criteria</td></tr>
+          <tr><td>Değişiklik kontrol kurulu</td><td>Sprint Review</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ HAFTA 3b — PROBLEM TANIMI ══ -->
+  <div class="page" id="w3b">
+    <div class="page-header">
+      <div class="page-week" style="color:var(--w3b)">■ Hafta 3b</div>
+      <div class="page-title">Problem Tanımı ve İş Süreçlerini Anlama</div>
+      <div class="page-date">17 Mart 2026  ·  ~13 dk okuma</div>
+    </div>
+    <div class="quote-card">
+      "Yanlış soruya doğru yanıt vermekten tehlikeli bir şey yoktur."
+      <div class="quote-author">— Peter Drucker, Management Challenges for the 21st Century</div>
+    </div>
+    <div class="warn-card"><strong>📊 PMI 2021:</strong> Projelerin <strong>%52'si</strong> yetersiz kapsam tanımı yüzünden hedeflerini kaçırmaktadır. Her onaylı "küçük ek özellik" tahminen %3-5 ek efor anlamına gelir.</div>
+
+    <h2 class="section">1. Problem Bildirimi — 5 Unsur</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Unsur</th><th>Soru</th><th>Örnek (Kampüs Platformu)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Problemi yaşayan taraf</strong></td><td>Kim yaşıyor?</td><td>Kampüs öğrencileri</td></tr>
+          <tr><td><strong>Problemin ne olduğu</strong></td><td>Etkisi nedir?</td><td>Güvensizlik ve verimsizlik</td></tr>
+          <tr><td><strong>Bağlam</strong></td><td>Nerede yaşanıyor?</td><td>Sosyal medya grupları üzerinden alışveriş</td></tr>
+          <tr><td><strong>Mevcut çözümlerin yetersizliği</strong></td><td>Neden alternatifler işe yaramıyor?</td><td>Kampüse özgü doğrulama yok</td></tr>
+          <tr><td><strong>Başarılı çözümün görünümü</strong></td><td>Çözülünce ne olur?</td><td>Güvenli, hızlı, şeffaf alışveriş</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="info-card"><strong>Altın Kural:</strong> Bu beş unsurdan herhangi birinin eksik olması, ileride değişen gereksinimlere dönüşür. "Biz bunu konuşmamıştık" cümlesini duyduğunuzda, eksik bir unsura bakıyorsunuzdur.</div>
+
+    <h2 class="section">2. İş Hedefleri (SMART)</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Hedef Türü</th><th>❌ Kötü</th><th>✅ İyi (SMART)</th></tr></thead>
+        <tbody>
+          <tr><td>Maliyet azaltma</td><td>"Maliyetleri düşürmek"</td><td>"Manuel süreçleri %40 azaltarak yıllık 200.000 TL tasarruf"</td></tr>
+          <tr><td>Gelir artışı</td><td>"Daha çok satmak"</td><td>"Online satışların 6 ayda %25 artışı"</td></tr>
+          <tr><td>Süre kısaltma</td><td>"Daha hızlı olmak"</td><td>"Sipariş işleme 2 günden 4 saate indirilmesi"</td></tr>
+          <tr><td>Kullanıcı memnuniyeti</td><td>"Müşterileri mutlu etmek"</td><td>"NPS skorunun 6 ayda 30 puan artırılması"</td></tr>
+          <tr><td>Uyumluluk</td><td>"Yasalara uymak"</td><td>"KVKK/GDPR gerekliliklerinin Q3'e kadar karşılanması"</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section">3. Kapsam Yönetimi</h2>
+    <p class="body-text"><span class="hl-r">Kapsam sürünmesi (scope creep):</span> Proje devam ederken başlangıçta planlanmamış özelliklerin yavaş yavaş eklenmesidir. Her biri "küçük bir şey" — ama on tane toplandığında proje %30-50 büyümüş olur.</p>
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="compare-label" style="color:var(--green)">✅ Kapsam İÇİNDE</div>
+        <div class="compare-item">Ürün listeleme</div>
+        <div class="compare-item">Arama/filtreleme</div>
+        <div class="compare-item">Kullanıcı mesajlaşması</div>
+        <div class="compare-item">Yönetici paneli</div>
+      </div>
+      <div class="compare-card">
+        <div class="compare-label" style="color:var(--red)">❌ Kapsam DIŞINDA</div>
+        <div class="compare-item">Ödeme sistemi entegrasyonu</div>
+        <div class="compare-item">Kargo takibi</div>
+        <div class="compare-item">Mobil uygulama (ilk sürüm)</div>
+        <div class="compare-item">Yapay zekâ destekli fiyat önerisi</div>
+      </div>
+    </div>
+
+    <h2 class="section">4. Varsayımlar vs Kısıtlar</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Varsayımlar (Risk olabilir)</th><th>Kısıtlar (Değişmez sınır)</th></tr></thead>
+        <tbody>
+          <tr><td>Kullanıcılar internet bağlantısına sahip</td><td>Bütçe: 50.000 TL</td></tr>
+          <tr><td>Kampüs ağı yeterli kapasitede</td><td>Süre: 6 ay</td></tr>
+          <tr><td>Temel bilgisayar okuryazarlığı var</td><td>Teknoloji: Mevcut web altyapısı</td></tr>
+          <tr><td>Yönetim aktif kullanmayı taahhüt ediyor</td><td>Ekip: 3 geliştirici + 1 analist</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="info-card"><strong>Kritik fark:</strong> Varsayımlar yanlış çıkabilir (risk yönetimi gerektirir). Kısıtlar değişmez — onlarla yaşamak zorundasınızdır.</div>
+
+    <h2 class="section">5. Paydaş Analizi</h2>
+    <div class="quote-card">
+      "Paydaş, bir sistemin gereksinimleri üzerinde doğrudan ya da dolaylı olarak etkisi olan ya da sistemin faaliyetlerinden doğrudan etkilenen bireyler veya gruplardır."
+      <div class="quote-author">— Ian Sommerville, Software Engineering, 10. Baskı</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Kategori</th><th>Örnekler</th><th>Neden Önemli?</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Son Kullanıcılar</strong></td><td>Öğrenci alıcılar, satıcılar</td><td>İhtiyaçları karşılanmazsa sistem kullanılmaz</td></tr>
+          <tr><td><strong>Yöneticiler</strong></td><td>Üniversite rektörlüğü</td><td>Bütçe ve onay yetkisine sahipler</td></tr>
+          <tr><td><strong>Geliştiriciler</strong></td><td>Sistemi inşa edenler</td><td>Teknik fizibiliteyi belirlerler</td></tr>
+          <tr><td><strong>Düzenleyici Kurumlar</strong></td><td>KVKK, sektörel regülatörler</td><td>Yasal uyumsuzluk = proje durdurma</td></tr>
+          <tr><td><strong>Dış Sistemler</strong></td><td>3. taraf entegrasyonlar</td><td>API uyumsuzluğu = entegrasyon çökmesi</td></tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <h3 class="subsection">Güç/İlgi Matrisi (Power/Interest Grid)</h3>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:8px;display:grid;grid-template-columns:60px 1fr 1fr;gap:8px;text-align:center;font-weight:600;text-transform:uppercase;letter-spacing:0.08em"><div></div><div>İLGİ DÜŞÜK</div><div>İLGİ YÜKSEK</div></div>
+    <div class="matrix-2x2">
+      <div class="m-cell m-tl">
+        <div class="m-cell-title">⭐ Memnun Tut</div>
+        <div class="m-cell-desc">Güç Yüksek / İlgi Düşük<br><br>Önemli kararlardan haberdar et, detaya boğma</div>
+      </div>
+      <div class="m-cell m-tr">
+        <div class="m-cell-title">🔴 Yakından Yönet</div>
+        <div class="m-cell-desc">Güç Yüksek / İlgi Yüksek<br><br>Sürekli iletişim, aktif katılım sağla</div>
+      </div>
+      <div class="m-cell m-bl">
+        <div class="m-cell-title">👁️ İzle</div>
+        <div class="m-cell-desc">Güç Düşük / İlgi Düşük<br><br>Minimum çaba ile takip et</div>
+      </div>
+      <div class="m-cell m-br">
+        <div class="m-cell-title">📢 Bilgilendir</div>
+        <div class="m-cell-desc">Güç Düşük / İlgi Yüksek<br><br>Düzenli güncelleme, geri bildirim al</div>
+      </div>
+    </div>
+
+    <h2 class="section">6. As-Is / To-Be Analizi</h2>
+    <div class="quote-card">
+      "Berbat bir süreci otomatikleştirmek, yalnızca berbat bir otomasyondur."
+      <div class="quote-author">— Yazılım mühendisliğinde yaygın uyarı</div>
+    </div>
+    
+    <h3 class="subsection">Gap Analizi Tablosu</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>As-Is Sorunu</th><th>To-Be Çözümü</th><th>Öncelik</th></tr></thead>
+        <tbody>
+          <tr><td>Ürün arama imkânsız (500 mesaj tarama)</td><td>Kategori/fiyat filtreli arama motoru</td><td><span class="hl-r">🔴 Yüksek</span></td></tr>
+          <tr><td>Güvenilirlik belirsiz (satıcı kim?)</td><td>Kullanıcı değerlendirme sistemi</td><td><span class="hl-r">🔴 Yüksek</span></td></tr>
+          <tr><td>Eski ilanlar silinmiyor</td><td>Otomatik ilan süresi dolma</td><td><span class="hl-y">🟡 Orta</span></td></tr>
+          <tr><td>Anlaşmazlık çözüm mekanizması yok</td><td>Şikâyet ve moderasyon sistemi</td><td><span class="hl-y">🟡 Orta</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section">7. Süreç Haritalama Araçları</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Araç</th><th>Ne Zaman?</th><th>Karmaşıklık</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Swimlane Diyagram</strong></td><td>Birden fazla aktörün katıldığı süreçler</td><td>⭐⭐ Orta</td></tr>
+          <tr><td><strong>Flowchart</strong></td><td>Basit süreç adımları ve karar noktaları</td><td>⭐ Düşük</td></tr>
+          <tr><td><strong>BPMN</strong></td><td>Standart iş süreci notasyonu</td><td>⭐⭐⭐ Yüksek</td></tr>
+          <tr><td><strong>Value Stream Map</strong></td><td>Lean/Agile'da değer akışı analizi</td><td>⭐⭐ Orta</td></tr>
+          <tr><td><strong>UML Activity Diagram</strong></td><td>Nesne yönelimli süreç modelleme</td><td>⭐⭐⭐ Yüksek</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ HAFTA 5 — GEREKSİNİM TOPLAMA ══ -->
+  <div class="page" id="w5">
+    <div class="page-header">
+      <div class="page-week" style="color:var(--w5)">■ Hafta 5</div>
+      <div class="page-title">Gereksinim Toplama Teknikleri</div>
+      <div class="page-date">24 Mart 2026  ·  ~11 dk okuma</div>
+    </div>
+    <div class="quote-card">
+      "Kullanıcılar ne istediklerini söyleyemezler — ta ki görmeden önce."
+      <div class="quote-author">— Gerald Weinberg, An Introduction to General Systems Thinking, 1975</div>
+    </div>
+    
+    <h2 class="section">1. Görüşme (Interview)</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tür</th><th>Açıklama</th><th>Ne Zaman?</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Yapılandırılmış</strong></td><td>Önceden hazırlanmış soru listesi, sırayla sorulur</td><td>Çok sayıda kullanıcıyla tutarlı veri toplarken</td></tr>
+          <tr><td><strong>Yarı Yapılandırılmış</strong></td><td>Ana sorular hazır, akışa göre yeni sorular eklenir</td><td>En yaygın tercih — hem derinlik hem tutarlılık</td></tr>
+          <tr><td><strong>Yapılandırılmamış</strong></td><td>Serbest sohbet, kullanıcı yönlendirmesiyle ilerler</td><td>Keşif aşamasında, ne bilmediğinizi bilmediğinizde</td></tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <h3 class="subsection">6 Altın Kural</h3>
+    <ol class="content-list">
+      <li><strong>Açık uçlu sorular sor</strong> — "Neden?", "Nasıl?", "Bir örnek anlatır mısınız?" (evet/hayır bitmez)</li>
+      <li><strong>Aktif dinle</strong> — Duraksamalar, ses alçalması, "aslında…" başlangıçları → gizli gereksinim</li>
+      <li><strong>Not al ve kaydet</strong> — İzin alarak ses kaydı yap; 2 saatte detayların %40'ını unutursun</li>
+      <li><strong>5 Neden tekniği</strong> — Yüzeysel soruna takılma, köke in</li>
+      <li><strong>Varsayım yapma</strong> — Kullanıcıdan onay al, kendin çevirme</li>
+      <li><strong>Somut örnek iste</strong> — "Gerçek bir durum anlatır mısınız?" ile soyut şikâyet somutlaşır</li>
+    </ol>
+    
+    <h3 class="subsection">5 Neden Tekniği — Örnek</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Adım</th><th>Soru → Yanıt</th></tr></thead>
+        <tbody>
+          <tr><td>Sorun</td><td>"Raporlar geç geliyor"</td></tr>
+          <tr><td>Neden 1</td><td>"Excel'de manuel hazırlanıyor"</td></tr>
+          <tr><td>Neden 2</td><td>"Otomatik rapor sistemi yok"</td></tr>
+          <tr><td>Neden 3</td><td>"Eski sistem rapor modülü desteklemiyor"</td></tr>
+          <tr><td>Neden 4</td><td>"10 yıl önce yazılmış, güncellenmemiş"</td></tr>
+          <tr><td><strong>Gerçek Gereksinim</strong></td><td><strong>Otomatik rapor modülü + bütçe onayı</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section">2. Anket (Survey)</h2>
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="compare-label" style="color:var(--accent2)">Görüşme</div>
+        <div class="compare-item">✅ Derinlik: Derin</div>
+        <div class="compare-item">❌ Kapsam: Az kişi (5-15)</div>
+        <div class="compare-item">Maliyet: Yüksek (zaman)</div>
+        <div class="compare-item">✅ Nitel veri: Zengin</div>
+        <div class="compare-item">✅ Takip sorusu: Anında</div>
+      </div>
+      <div class="compare-card">
+        <div class="compare-label" style="color:var(--w5)">Anket</div>
+        <div class="compare-item">❌ Derinlik: Yüzeysel</div>
+        <div class="compare-item">✅ Kapsam: Çok kişi (100+)</div>
+        <div class="compare-item">Maliyet: Düşük</div>
+        <div class="compare-item">✅ Nicel veri: Kolay</div>
+        <div class="compare-item">❌ Takip sorusu: Mümkün değil</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <strong>İyi Anket Tasarımının 4 Kuralı:</strong><br>
+      1. <strong>Likert ölçeği kullan</strong> — 1-5 arası sayısal puan; "önemli" kelimesi belirsizdir<br>
+      2. <strong>Çift olumsuzlamadan kaçın</strong> — "Sistemi kullanmamak istemez misiniz?" anlaşılmaz<br>
+      3. <strong>Pilot test yap</strong> — 5-10 kişiye önce dene, "anladınız mı?" diye sor<br>
+      4. <strong>10-15 soruyla sınırla</strong> — 50 soruluk anketi kimse tamamlamaz
+    </div>
+
+    <h2 class="section">3. Gözlem (Observation)</h2>
+    <div class="quote-card">
+      "İnsanlar, yaptıklarını söyledikleri ile gerçekte yaptıkları arasındaki tutarsızlığı fark etmezler. Ancak gözlem bu uçurumu gözler önüne serer."
+      <div class="quote-author">— Don Norman, The Design of Everyday Things, 2013</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Teknik</th><th>Nasıl Çalışır?</th><th>Avantajı</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Doğrudan Gözlem</strong></td><td>Analist kullanıcının yanında oturur, izler</td><td>Doğal ortamda gerçek davranış</td></tr>
+          <tr><td><strong>Düşünce Sesli Protokol</strong></td><td>Kullanıcı yaparken düşüncelerini sesli söyler</td><td>Karar süreçleri ortaya çıkar</td></tr>
+          <tr><td><strong>Gölge Çalışma</strong></td><td>Kullanıcıyla gün boyu birlikte çalışılır</td><td>Bağlamın tamamı kavranır</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="warn-card"><strong>Gerçek Senaryo:</strong> Hastane projesinde hemşireler görüşmede "sorun yok" dedi. Gözlemde: %60'ı sisteme girdikten sonra kâğıda da yazıyor (güvenmiyorlar), ilaç takibi 12 tıklama gerektiriyor, acilde sistemi atlayıp telefon kullanıyorlar. Hiçbiri görüşmede çıkmamıştı.</div>
+
+    <h2 class="section">4. Doküman Analizi</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Doküman Türü</th><th>Ne Öğrenirsiniz?</th></tr></thead>
+        <tbody>
+          <tr><td>Mevcut form tasarımları</td><td>Hangi veriler toplanıyor? Hangi alanlar zorunlu?</td></tr>
+          <tr><td>Raporlar</td><td>Hangi bilgiler hangi biçimde sunuluyor? Kim okuyor?</td></tr>
+          <tr><td>İş kuralları kılavuzu</td><td>İşletmenin mantığı (indirim kuralları, onay süreçleri)</td></tr>
+          <tr><td>Yasal mevzuat</td><td>KVKK, GDPR, vergi mevzuatı gibi regülasyonlar</td></tr>
+          <tr><td>Hata/şikâyet kayıtları</td><td>Mevcut sistemin en çok nerede acı verdiği</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section">5. Workshop — JAD Tekniği</h2>
+    <p class="body-text">IBM tarafından 1970'lerde geliştirilen <span class="hl">JAD (Joint Application Development)</span>, geleneksel görüşmeye kıyasla gereksinim toplama süresini <strong>%15-20 kısaltmaktadır</strong>.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Kural</th><th>Açıklama</th></tr></thead>
+        <tbody>
+          <tr><td>Katılımcı sayısını sınırla</td><td>5-12 kişi; 20 kişilik toplantıda sessizler ezilir</td></tr>
+          <tr><td>Kolaylaştırıcı (facilitator) ata</td><td>Tarafsız kalmalı, hiçbir fikre taraf olmamalı</td></tr>
+          <tr><td>Önce ıraksak düşün</td><td>Tüm fikirleri topla, eleştirme → Amaç: miktar</td></tr>
+          <tr><td>Sonra yakınsak düşün</td><td>Önceliklendir, grupla, ele → Amaç: kalite</td></tr>
+          <tr><td>Gerçek zamanlı dokümante et</td><td>Kararları ve tartışmaları anlık kaydet</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section">6. Prototip — IKIWISI</h2>
+    <p class="body-text"><span class="hl">IKIWISI = "I Know It When I See It"</span> — Gördüğümde ne istediğimi anlıyorum. Kullanıcılar soyut konsepti değerlendirmekte zorlanır ama wireframe görünce çok daha net geri bildirim verir.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Araç</th><th>Tür</th><th>Öğrenme Eşiği</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Kâğıt-kalem</strong></td><td>Düşük sadakat (lo-fi)</td><td>⭐ Çok kolay</td></tr>
+          <tr><td><strong>Balsamiq</strong></td><td>Wireframe</td><td>⭐⭐ Kolay</td></tr>
+          <tr><td><strong>Figma</strong></td><td>Yüksek sadakat (hi-fi)</td><td>⭐⭐⭐ Orta</td></tr>
+          <tr><td><strong>Adobe XD</strong></td><td>Yüksek sadakat</td><td>⭐⭐⭐ Orta</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="warn-card"><strong>⚠️ Prototip Tuzağı:</strong> Kullanıcı prototipi gerçek sistem sanabilir. Her görüşmenin başında: <em>"Bu bir taslaktır, her şey değişebilir. Amacımız bitmiş ürün göstermek değil, fikirlerinizi almaktır."</em></div>
+
+    <h2 class="section">7. Use Case vs User Story</h2>
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="compare-label" style="color:var(--purple)">Use Case (Jacobson, 1987)</div>
+        <div class="compare-item">Waterfall / RUP metodolojisi</div>
+        <div class="compare-item">Çok detaylı senaryo</div>
+        <div class="compare-item">Alternatif akışlar tanımlanır</div>
+        <div class="compare-item">Uzun yazım süresi</div>
+        <div class="compare-item">Değişime uyumu zor</div>
+        <div class="compare-item">Orta paydaş anlayabilirliği</div>
+      </div>
+      <div class="compare-card">
+        <div class="compare-label" style="color:var(--green)">User Story (Cohn, 2004)</div>
+        <div class="compare-item">Agile / Scrum metodolojisi</div>
+        <div class="compare-item">Kısa ve öz</div>
+        <div class="compare-item">Ayrı story'lerde detaylanır</div>
+        <div class="compare-item">Kısa yazım süresi</div>
+        <div class="compare-item">Değişime kolay uyum</div>
+        <div class="compare-item">Yüksek paydaş anlayabilirliği</div>
+      </div>
+    </div>
+    
+    <div class="highlight-box">
+      <div class="hb-title">Use Case Yapısı</div>
+      <p class="body-text" style="margin:0;font-size:13px">
+        <strong>Aktör:</strong> Satıcı (Öğrenci)<br>
+        <strong>Ön Koşul:</strong> Kullanıcı sisteme giriş yapmış olmalı<br>
+        <strong>Ana Akış:</strong> Form açılır → Bilgiler girilir → Fotoğraf yüklenir → Yayınla tıklanır → Sistem kaydeder<br>
+        <strong>Alternatif Akış:</strong> 5 MB aşılırsa uyarı verilir; zorunlu alan eksikse hata gösterilir
+      </p>
+    </div>
+    
+    <div class="highlight-box" style="background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(6,182,212,0.06));border-color:rgba(16,185,129,0.2)">
+      <div class="hb-title" style="color:#6ee7b7">User Story Formatı</div>
+      <p class="body-text" style="margin:0;font-size:13px">
+        <code>"Ben bir [satıcı] olarak, ürünümü platforma ekleyebilmek için ilan oluşturma formu kullanabilmek istiyorum."</code><br><br>
+        <strong>Kabul Kriterleri:</strong><br>
+        ✅ Başlık, fiyat ve en az 1 fotoğraf girildiğinde form gönderilebilir<br>
+        ✅ Eksik alan varsa kırmızı hata mesajı gösterilir<br>
+        ✅ Başarıyla kaydedilince detay sayfasına yönlendirilir
+      </p>
+    </div>
+
+    <h2 class="section">8. Özet — Teknik Karşılaştırma</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Teknik</th><th>Güçlü Yönü</th><th>Zayıf Yönü</th><th>Ne Zaman?</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Görüşme</strong></td><td>Derin anlayış, gizli gereksinimler</td><td>Zaman alıcı, az kişi</td><td>Her projede, kesinlikle</td></tr>
+          <tr><td><strong>Anket</strong></td><td>Geniş kitle, nicel veri</td><td>Yüzeysel, takip sorusu yok</td><td>Görüşmeleri doğrulamak için</td></tr>
+          <tr><td><strong>Gözlem</strong></td><td>Gerçek davranışı ortaya çıkarır</td><td>Gözlemci etkisi</td><td>Söz-eylem farkını bulmak için</td></tr>
+          <tr><td><strong>Doküman Analizi</strong></td><td>Mevcut sistemi anlar</td><td>Güncel olmayabilir</td><td>Proje başlangıcında bağlam için</td></tr>
+          <tr><td><strong>Workshop</strong></td><td>Çatışmaları çözer, konsensüs</td><td>Lojistik zorluk</td><td>Çok paydaşlı projelerde</td></tr>
+          <tr><td><strong>Prototip</strong></td><td>Soyutu somutlaştırır</td><td>"Bitmiş ürün" yanılgısı</td><td>Arayüz gereksinimlerinde</td></tr>
+          <tr><td><strong>Use Case</strong></td><td>Detaylı senaryo</td><td>Uzun, değişimi zor</td><td>Waterfall / detaylı tasarım</td></tr>
+          <tr><td><strong>User Story</strong></td><td>Kısa, herkes anlar</td><td>Detay eksik kalabilir</td><td>Agile / sprint planlama</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ FLASH KARTLAR ══ -->
+  <div class="page" id="flashcards">
+    <div class="page-header">
+      <div class="page-week" style="color:var(--accent2)">🃏 Çalışma Aracı</div>
+      <div class="page-title">Flash Kartlar</div>
+      <div class="page-date">Karta tıkla → Cevabı gör</div>
+    </div>
+    <div class="fc-grid" id="fcGrid"></div>
+  </div>
+
+  <!-- ══ QUIZ ══ -->
+  <div class="page" id="quiz">
+    <div class="page-header">
+      <div class="page-week" style="color:var(--green)">📝 Mini Sınav</div>
+      <div class="page-title">Sınav Hazırlık Testi</div>
+      <div class="page-date">20 soru — Her soruyu okuyup seçeneğe tıkla</div>
+    </div>
+    <div class="quiz-container" id="quizContainer"></div>
+  </div>
+
+</main>
+
+<script>
+// ── PAGE NAVIGATION ──
+const pages = document.querySelectorAll('.page');
+const navItems = document.querySelectorAll('.nav-item');
+const breadcrumb = document.getElementById('breadcrumb');
+const visitedPages = new Set(['home']);
+
+const pageTitles = {
+  home: 'Ana Sayfa', w1: 'Hafta 1 — Giriş & Temel',
+  w2: 'Hafta 2 — Süreç Modelleri', w3: 'Hafta 3 — Gereksinim Müh.',
+  w3b: 'Hafta 3b — Problem Tanımı', w5: 'Hafta 5 — Toplama Tek.',
+  flashcards: 'Flash Kartlar', quiz: 'Mini Sınav'
+};
+
+function showPage(id) {
+  pages.forEach(p => p.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+  navItems.forEach(n => n.classList.remove('active'));
+  document.querySelector(`[onclick="showPage('${id}')"]`)?.classList.add('active');
+  breadcrumb.textContent = pageTitles[id] || id;
+  document.getElementById('main').scrollTo(0, 0);
+  visitedPages.add(id);
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = Object.keys(pageTitles).length;
+  const pct = Math.round((visitedPages.size / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = pct + '%';
+}
+
+// ── SEARCH ──
+function searchContent(q) {
+  if (!q.trim()) return;
+  if (q.length < 3) return;
+  // Simple: highlight and navigate to best match
+  const allText = document.querySelectorAll('.page p, .page td, .page li, .page h2, .page h3');
+  const ql = q.toLowerCase();
+  let found = null;
+  allText.forEach(el => {
+    if (!found && el.textContent.toLowerCase().includes(ql)) {
+      found = el.closest('.page');
+    }
+  });
+  if (found) showPage(found.id);
+}
+
+// ── FLASH CARDS DATA ──
+const flashcards = [
+  { cat: 'Hafta 1', q: 'Sistem nedir?', a: 'Ortak bir amaç için birlikte çalışan, birbiriyle ilişkili bileşenler bütünü. (Yunanca σύστημα = bir araya getirilmiş parçalar)' },
+  { cat: 'Hafta 1', q: 'Aristoteles\'in sisteme katkısı nedir?', a: '"Bütün, parçalarının toplamından fazladır." → Emergent properties (ortaya çıkan özellikler) kavramının temeli.' },
+  { cat: 'Hafta 1', q: 'SDLC\'nin 7 aşaması nelerdir?', a: '1. Planlama → 2. Analiz → 3. Tasarım → 4. Geliştirme → 5. Test → 6. Dağıtım → 7. Bakım' },
+  { cat: 'Hafta 1', q: 'Sistem Analizi ile Sistem Tasarımı arasındaki temel fark?', a: 'Analiz: "Ne yapılmalı?" (problem odaklı, kullanıcı perspektifi, gereksinim belgesi). Tasarım: "Nasıl yapılmalı?" (çözüm odaklı, geliştirici perspektifi, mimari belge).' },
+  { cat: 'Hafta 1', q: 'TPS, MIS, DSS, ESS nedir?', a: 'TPS: İşlem İşleme (POS, bordro) · MIS: Yönetim Bilgi (satış raporu) · DSS: Karar Destek (fiyatlandırma) · ESS: Yönetici Destek (trend analizi)' },
+  { cat: 'Hafta 1', q: 'Verification vs Validation farkı?', a: 'Verification: "Doğru ürünü mü geliştiriyoruz?" (tasarım gereksinimle uyuşuyor mu?). Validation: "Ürün doğru çalışıyor mu?" (kullanıcı ihtiyacını karşılıyor mu?)' },
+  { cat: 'Hafta 2', q: 'Waterfall modeli ne zaman kullanılır?', a: 'Gereksinimler baştan netse, değişim maliyeti yüksekse, ağır dokümantasyon/regülasyon gerekiyorsa. Savunma, medikal, havacılık, kamu ihalesi.' },
+  { cat: 'Hafta 2', q: 'V-Model\'in Waterfall\'dan farkı nedir?', a: 'V-Model\'de her geliştirme adımının bir test karşılığı vardır: Gereksinim → UAT, Sistem Tasarımı → Sistem Testi, Mimari → Entegrasyon Testi, Modül → Birim Testi.' },
+  { cat: 'Hafta 2', q: 'Scrum\'ın 3 rolü nedir?', a: 'Product Owner (iş değerini ve önceliği yönetir) · Scrum Master (akışı korur, engelleri kaldırır) · Geliştirme Ekibi (teslimatı üretir)' },
+  { cat: 'Hafta 2', q: 'Scrum artefaktları nelerdir?', a: 'Product Backlog (tüm gereksinimler) · Sprint Backlog (sprint için seçilenler) · Increment (teslim edilebilir çıktı)' },
+  { cat: 'Hafta 2', q: 'Kanban\'ın ana prensibi nedir?', a: '"Stop starting, start finishing." İşi görselleştir, WIP limiti koy, akışı ölç (cycle time, throughput), sürekli iyileştir.' },
+  { cat: 'Hafta 2', q: 'Agile Manifesto\'nun 4 değeri?', a: '1. Bireyler ve etkileşimler · 2. Çalışan yazılım · 3. Müşteri iş birliği · 4. Değişime yanıt — hepsinde ikinci değer önce gelir.' },
+  { cat: 'Hafta 3', q: '1:100 Kuralı nedir?', a: 'IBM araştırması: Gereksinim aşamasında 1 saatte bulunan hata, üretimde 100 saatte düzeltilir. Erken tespit = büyük tasarruf.' },
+  { cat: 'Hafta 3', q: 'FR vs NFR farkı nedir?', a: 'FR (Fonksiyonel): Sistemin NE yapacağı — işlevler, eylemler. NFR (Fonksiyonel Olmayan): NASİL yapacağı — kalite özellikleri (performans, güvenlik, kullanılabilirlik).' },
+  { cat: 'Hafta 3', q: 'SMART kısaltması ne anlama gelir?', a: 'Specific (Özgül) · Measurable (Ölçülebilir) · Achievable (Erişilebilir) · Relevant (İlgili) · Time-bound (Zamanlı)' },
+  { cat: 'Hafta 3', q: 'MoSCoW önceliklendirmesi nedir?', a: 'Must Have (olmazsa olmaz, maks %60) · Should Have (önemli ama zorunlu değil) · Could Have (güzel olur) · Won\'t Have (bu sürümde yok)' },
+  { cat: 'Hafta 3', q: '"Salatalık gereksinimi" ne demek?', a: 'Dışarıdan yeşil görünür ama içi boştur. Örnek: "Sistem kullanıcı dostu olmalı." Ölçülemeyen, test edilemeyen, herkesin farklı yorumladığı gereksinim.' },
+  { cat: 'Hafta 3b', q: 'Problem Bildirimi\'nin 5 unsuru?', a: '1. Problemi yaşayan taraf · 2. Problemin ne olduğu · 3. Bağlam · 4. Mevcut çözümlerin yetersizliği · 5. Başarılı çözümün görünümü' },
+  { cat: 'Hafta 3b', q: 'Kapsam sürünmesi (scope creep) nedir?', a: 'Proje sürerken başlangıçta planlanmamış özelliklerin yavaş yavaş eklenmesi. Her "küçük şey" tek başına masum görünür; onlarcası toplanınca proje %30-50 büyür.' },
+  { cat: 'Hafta 3b', q: 'Varsayım vs Kısıt farkı?', a: 'Varsayım: Doğru kabul edilen ama henüz doğrulanmamış — potansiyel risk. Kısıt: Kesin ve müzakere edilemez sınır (bütçe, süre, ekip boyutu).' },
+  { cat: 'Hafta 3b', q: 'As-Is ve To-Be ne demektir?', a: 'As-Is: Mevcut durumun haritası (şu an nasıl işliyor?). To-Be: Hedef durumun tasarımı (nasıl olmalı?). Gap Analizi = ikisi arasındaki fark.' },
+  { cat: 'Hafta 3b', q: 'Güç/İlgi Matrisi 4 bölgesi?', a: 'Güç↑ İlgi↓ → Memnun Tut · Güç↑ İlgi↑ → Yakından Yönet · Güç↓ İlgi↓ → İzle · Güç↓ İlgi↑ → Bilgilendir' },
+  { cat: 'Hafta 5', q: 'Görüşmede "5 Neden" tekniği nasıl uygulanır?', a: 'Sorunun yüzeyine takılmak yerine "Neden?" sorusunu art arda 5 kez sorarak kök nedene inersin. Kök neden = gerçek gereksinim.' },
+  { cat: 'Hafta 5', q: 'JAD nedir ve ne fayda sağlar?', a: 'Joint Application Development — IBM\'in workshop tekniği. Tüm paydaşları aynı odaya toplar. Geleneksel görüşmeye kıyasla gereksinim toplamayı %15-20 kısaltır.' },
+  { cat: 'Hafta 5', q: 'IKIWISI ne demektir?', a: '"I Know It When I See It" — Gördüğümde ne istediğimi anlıyorum. Prototip/wireframe görmeden kullanıcılar ihtiyaçlarını net ifade edemez; gördükten sonra çok daha net geri bildirim verir.' },
+  { cat: 'Hafta 5', q: 'Use Case ile User Story\'nin temel farkı?', a: 'Use Case: Waterfall/RUP için detaylı senaryo belgesi (Jacobson, 1987). User Story: Agile/Scrum için kısa kart formatı (Cohn, 2004). Format: "Ben bir [rol] olarak [özellik] istiyorum."' },
+  { cat: 'Hafta 5', q: 'Gözlemin Görüşmeye göre avantajı nedir?', a: 'Kullanıcıların söyledikleri ile yaptıkları çoğu zaman farklıdır. Gözlem gerçek davranışı ortaya çıkarır; görüşmede asla ortaya çıkmayan gizli sorunları gösterir.' },
+  { cat: 'Hafta 5', q: 'Anket tasarımında Likert ölçeği neden kullanılır?', a: '1-5 arası sayısal puan verilerek ölçülebilir nicel veri toplanır. "Önemli" ya da "kullanışlı" gibi subjektif kelimeler yerine istatistiksel analiz yapılabilir.' },
+];
+
+function buildFlashcards() {
+  const grid = document.getElementById('fcGrid');
+  grid.innerHTML = flashcards.map((fc, i) => {
+    const colors = { 'Hafta 1': 'var(--w1)', 'Hafta 2': 'var(--w2)', 'Hafta 3': 'var(--w3)', 'Hafta 3b': 'var(--w3b)', 'Hafta 5': 'var(--w5)' };
+    return `
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front">
+          <div class="fc-category" style="color:${colors[fc.cat]}">${fc.cat}</div>
+          <div class="fc-q">${fc.q}</div>
+          <div class="fc-hint">tıkla →</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-category" style="color:var(--green)">✓ Cevap</div>
+          <div class="fc-a">${fc.a}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── QUIZ DATA ──
+const quizData = [
+  { q: 'Aristoteles\'e göre sistem düşüncesinin temeli nedir?', opts: ['Parçalar toplamı bütüne eşittir', 'Bütün, parçalarının toplamından fazladır', 'Sistem çevresiyle etkileşemez', 'Girdiler çıktılara eşittir'], ans: 1, exp: 'Aristoteles "Bütün, parçalarının toplamından fazladır" diyerek emergent properties kavramının temelini atmıştır.' },
+  { q: 'SDLC\'de bir hata üretim aşamasında düzeltilirse maliyeti ne kadar artar?', opts: ['5 kat', '20 kat', '50 kat', '100 kat'], ans: 3, exp: 'IBM araştırmasına göre 1:100 kuralı: Gereksinim aşamasındaki maliyetin 100 katına çıkar.' },
+  { q: '"Sistem hızlı olmalı" ifadesi neden geçersiz bir gereksinimdir?', opts: ['Teknik değil', 'SMART kriterini karşılamaz — ölçülemez', 'Paydaşları kapsamıyor', 'Fonksiyonel değil'], ans: 1, exp: '"Hızlı" subjektiftir, ölçülemez. SMART gereksinim olması için ölçülebilir olması gerekir: "Sayfa 500ms\'de yüklenmeli (95. yüzdelik)".' },
+  { q: 'Waterfall modelinin en büyük zayıflığı nedir?', opts: ['Çok pahalı', 'Kullanıcı ürünü geç görür ve erken hata geç aşamada patlar', 'Sprint planlaması zordur', 'WIP limiti yoktur'], ans: 1, exp: 'Waterfall\'da kullanıcı ürünü ancak dağıtım aşamasında görür. Başlangıçta tespit edilemeyen hatalar test/üretim aşamasında çok pahalıya çıkar.' },
+  { q: 'V-Model\'de "Gereksinim Analizi" aşamasının test karşılığı nedir?', opts: ['Birim Testi', 'Entegrasyon Testi', 'Sistem Testi', 'Kabul Testi (UAT)'], ans: 3, exp: 'V-Model\'de her geliştirme adımının bir test karşılığı vardır. Gereksinim Analizi → Kabul Testi (UAT).' },
+  { q: 'MoSCoW\'da "Must Have" gereksinimleri toplam listenin kaçını geçmemelidir?', opts: ['%40', '%60', '%75', '%90'], ans: 1, exp: 'Pratik kural: Must Have gereksinimleri %60\'ı geçmemelidir. Her şey "olmazsa olmaz" olursa hiçbir şey gerçekten öncelikli değildir.' },
+  { q: 'Scrum\'da Sprint başında yapılan toplantı nedir?', opts: ['Sprint Review', 'Sprint Retrospective', 'Sprint Planning', 'Daily Scrum'], ans: 2, exp: 'Sprint Planning, her sprint\'in başında yapılan ve sprint backlog\'un belirleneceği toplantıdır.' },
+  { q: '"Stop starting, start finishing" ilkesi hangi yaklaşımla özdeşleşmiştir?', opts: ['Waterfall', 'Scrum', 'Kanban', 'V-Model'], ans: 2, exp: 'Bu ilke Kanban\'ın temel felsefesini özetler: çok işe başlamak değil, mevcut işi bitirmek değer üretir.' },
+  { q: 'Fonksiyonel OLMAYAN gereksinim örneği hangisidir?', opts: ['Kullanıcı giriş yapabilmeli', 'Sistem %99,9 uptime sağlamalı', 'Yönetici rapor alabilmeli', 'Satıcı ilan oluşturabilmeli'], ans: 1, exp: 'NFR\'ler sistemin nasıl çalışacağını tanımlar: güvenilirlik, performans, güvenlik, ölçeklenebilirlik gibi kalite özellikleri.' },
+  { q: 'Problem Bildirimi\'nin hangi unsuru "Mevcut çözümlerin neden işe yaramadığını" açıklar?', opts: ['Bağlam', 'Problemi yaşayan taraf', 'Mevcut çözümlerin yetersizliği', 'Başarılı çözümün görünümü'], ans: 2, exp: '5. unsur olan "Mevcut çözümlerin yetersizliği" alternatif yaklaşımların neden yetersiz kaldığını açıklar.' },
+  { q: 'As-Is analizi neyi inceler?', opts: ['Gelecekteki sistemi', 'Mevcut durumu / iş sürecini', 'Kapsam dışını', 'Test senaryolarını'], ans: 1, exp: 'As-Is: Mevcut durumun haritası (şu an nasıl işliyor?). To-Be: Hedef durum. Gap = aralarındaki fark.' },
+  { q: 'Güç/İlgi Matrisinde "Yakından Yönet" stratejisi hangi bölge için geçerlidir?', opts: ['Güç düşük, İlgi düşük', 'Güç yüksek, İlgi düşük', 'Güç düşük, İlgi yüksek', 'Güç yüksek, İlgi yüksek'], ans: 3, exp: 'Güç yüksek + İlgi yüksek = Yakından Yönet. Sürekli iletişim ve aktif katılım gerektirir.' },
+  { q: 'Kapsam sürünmesi (scope creep) ne anlama gelir?', opts: ['Bütçenin aşılması', 'Proje sürerken planlanmamış özellik eklenmesi', 'Test aşamasındaki hata artışı', 'Takım üyesi değişimi'], ans: 1, exp: 'PMI 2021: Projelerin %52\'si yetersiz kapsam tanımı yüzünden hedeflerini kaçırır. Her "küçük" ek özellik %3-5 ek efor anlamına gelir.' },
+  { q: 'IKIWISI ne anlama gelir ve hangi teknikle ilgilidir?', opts: ['Agile ilkesi', '"I Know It When I See It" — Prototipleme', 'JAD workshop terimi', 'Scrum retrospektif tekniği'], ans: 1, exp: 'IKIWISI: "I Know It When I See It" — Prototip/wireframe görüldüğünde kullanıcılar ihtiyaçlarını çok daha net ifade eder.' },
+  { q: 'JAD (Joint Application Development) ne kadar süre tasarrufu sağlar?', opts: ['%5', '%10', '%15-20', '%50'], ans: 2, exp: 'IBM tarafından geliştirilen JAD workshop tekniği, geleneksel görüşmeye kıyasla gereksinim toplama süresini %15-20 kısaltmaktadır.' },
+  { q: 'User Story formatı hangisidir?', opts: ['"Sistem [özellik] yapmalıdır"', '"Ben bir [rol] olarak [özellik] istiyorum"', '"Use Case: [aktör] [hedef] yapar"', '"FR-01: [gereksinim]"'], ans: 1, exp: 'Mike Cohn\'un 2004\'te standartlaştırdığı format: "Ben bir [kullanıcı rolü] olarak, [hedef] için [özellik] istiyorum." + Kabul kriterleri.' },
+  { q: '"Gözlem" tekniğinin görüşmeye göre temel avantajı nedir?', opts: ['Daha hızlı', 'Kullanıcıların gerçek davranışını ortaya çıkarır', 'Daha ucuz', 'Daha az paydaş gerektirir'], ans: 1, exp: 'İnsanların söyledikleri ile yaptıkları çoğu zaman farklıdır. Gözlem bu uçurumu gözler önüne serer; görüşmede asla ortaya çıkmayan sorunları keşfeder.' },
+  { q: 'Gereksinim izlenebilirliğinde "ileri izlenebilirlik" ne anlama gelir?', opts: ['Test → Kod → Gereksinim', 'Gereksinim → Tasarım → Kod → Test', 'Hata → Düzeltme → Test', 'Paydaş → Gereksinim → Test'], ans: 1, exp: 'Forward traceability: Gereksinim → Tasarım → Kod → Test. Bir gereksinim nerede gerçekleştirildi? sorusuna yanıt verir.' },
+  { q: 'SRS belgesi hangi standarda göre hazırlanır?', opts: ['IEEE 1471', 'IEEE 830', 'ISO 9001', 'UML 2.0'], ans: 1, exp: 'IEEE 830 standardı, Yazılım Gereksinimleri Spesifikasyonu (SRS) belgesinin yapısını tanımlar: Giriş, Genel Açıklama, Özel Gereksinimler, Ekler.' },
+  { q: '"Throw-away prototip" ile "Evolutionary prototip" arasındaki fark nedir?', opts: ['Sadece maliyetleri farklı', 'Throw-away keşif sonrası atılır; Evolutionary ürüne dönüşür', 'İkisi de aynı şeydir', 'Evolutionary daha ucuzdur'], ans: 1, exp: 'Throw-away: Kullanıcı gereksinimlerini anlamak için yapılır, atılır. Evolutionary: Sürekli iyileştirilerek gerçek ürüne dönüşür.' },
+];
+
+let currentQ = 0;
+let score = 0;
+let answered = [];
+
+function buildQuiz() {
+  const container = document.getElementById('quizContainer');
+  answered = new Array(quizData.length).fill(false);
+  score = 0;
+  currentQ = 0;
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const container = document.getElementById('quizContainer');
+  if (currentQ >= quizData.length) {
+    container.innerHTML = `
+      <div class="quiz-score">
+        <div class="score-circle">${score}/${quizData.length}</div>
+        <h2 style="font-family:'Syne',sans-serif;margin-bottom:8px">${score >= 16 ? '🎉 Harika!' : score >= 12 ? '👍 İyi iş!' : '📚 Biraz daha çalış!'}</h2>
+        <p style="color:var(--text2);margin-bottom:24px">${score >= 16 ? 'Sınava hazırsın!' : score >= 12 ? 'Birkaç konuyu gözden geçir.' : 'Flash kartlara bak, tekrar dene.'}</p>
+        <button class="btn btn-primary" onclick="buildQuiz()">Tekrar Dene</button>
+        <button class="btn btn-ghost" style="margin-left:8px" onclick="showPage('home')">Ana Sayfa</button>
+      </div>`;
+    return;
+  }
+  const q = quizData[currentQ];
+  const dots = quizData.map((_, i) => `<div class="qp-dot ${i < currentQ ? 'done' : i === currentQ ? 'active' : ''}"></div>`).join('');
+  container.innerHTML = `
+    <div class="quiz-progress">${dots}</div>
+    <div class="quiz-card">
+      <div class="q-num">Soru ${currentQ + 1} / ${quizData.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-options">
+        ${q.opts.map((o, i) => `<button class="q-opt" onclick="answerQ(${i})">${o}</button>`).join('')}
+      </div>
+      <div class="q-explanation" id="qExp">${q.exp}</div>
+    </div>
+    <div style="text-align:center;margin-top:8px;font-size:12px;color:var(--text3)">Puan: ${score}/${currentQ}</div>`;
+}
+
+function answerQ(i) {
+  const q = quizData[currentQ];
+  const opts = document.querySelectorAll('.q-opt');
+  opts.forEach(o => o.disabled = true);
+  opts[q.ans].classList.add('correct');
+  if (i !== q.ans) { opts[i].classList.add('wrong'); }
+  else { score++; }
+  document.getElementById('qExp').style.display = 'block';
+  setTimeout(() => { currentQ++; renderQuestion(); }, 2000);
+}
+
+// ── INIT ──
+buildFlashcards();
+buildQuiz();
+
+// Link anchor clicks
+document.querySelectorAll('.toc-link').forEach(l => {
+  l.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(l.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
