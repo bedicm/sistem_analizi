@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Analizi ve Tasarımı: Master Rehber</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6',
+                            700: '#0f766e',
+                            900: '#134e4a',
+                        },
+                        accent: {
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        <!-- Chosen Palette: Warm neutral background (stone/slate) with Teal (brand) and Amber (accent) for highlights. -->
+        <!-- Application Structure Plan: The SPA uses a sticky sidebar navigation (or top nav on mobile) allowing users to jump between the 5 distinct study modules. The structure breaks down the linear text into interactive tabs, visual grids (Stakeholder Matrix), and dynamic charts (Bug Cost, MoSCoW prioritization) to make the heavy theoretical content highly engaging, chunked, and memorable for studying. -->
+        <!-- Visualization & Content Choices: 1. Bug Cost -> Chart.js Bar Chart -> Shows exponential growth of bug costs visually, replacing text explanation. 2. Process Models -> Interactive Tabs -> Avoids text wall, lets user focus on one model at a time. 3. Stakeholder Matrix -> HTML Grid -> Interactive 2x2 matrix matching the source theory. 4. MoSCoW -> Chart.js Doughnut -> Visualizes the 60% 'Must Have' rule. NO SVG/Mermaid used. -->
+        <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+        body {
+            background-color: #fafaf9;
+            color: #1c1917;
+            scroll-behavior: smooth;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-link.active {
+            background-color: #e6fffa;
+            color: #0f766e;
+            border-right: 4px solid #0f766e;
+            font-weight: 600;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .matrix-cell {
+            transition: all 0.3s ease;
+        }
+        
+        .matrix-cell:hover {
+            transform: scale(1.02);
+            z-index: 10;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row min-h-screen">
+
+    <nav class="w-full md:w-64 bg-white shadow-xl md:fixed md:h-screen z-50 flex flex-col">
+        <div class="p-6 bg-brand-900 text-white">
+            <h1 class="text-2xl font-bold tracking-tight">Sistem Analizi</h1>
+            <p class="text-brand-100 text-sm mt-1 opacity-80">Master Çalışma Rehberi</p>
+        </div>
+        <div class="flex-1 overflow-y-auto py-4 flex flex-col gap-1" id="nav-menu">
+            <button data-target="intro" class="nav-link w-full text-left px-6 py-3 text-stone-600 hover:bg-stone-50 transition-colors active">🚀 Başlangıç</button>
+            <button data-target="modul1" class="nav-link w-full text-left px-6 py-3 text-stone-600 hover:bg-stone-50 transition-colors">🔑 Modül 1: Temeller</button>
+            <button data-target="modul2" class="nav-link w-full text-left px-6 py-3 text-stone-600 hover:bg-stone-50 transition-colors">🛠️ Modül 2: Süreçler</button>
+            <button data-target="modul3" class="nav-link w-full text-left px-6 py-3 text-stone-600 hover:bg-stone-50 transition-colors">🎯 Modül 3: Teşhis</button>
+            <button data-target="modul4" class="nav-link w-full text-left px-6 py-3 text-stone-600 hover:bg-stone-50 transition-colors">🧬 Modül 4: Gereksinim</button>
+            <button data-target="modul5" class="nav-link w-full text-left px-6 py-3 text-stone-600 hover:bg-stone-50 transition-colors">🧠 Modül 5: Zihin Okuma</button>
+        </div>
+    </nav>
+
+    <main class="flex-1 md:ml-64 p-6 md:p-12 lg:p-20 overflow-x-hidden">
+        
+        <section id="intro" class="mb-24 fade-in">
+            <div class="max-w-4xl mx-auto">
+                <div class="inline-block px-3 py-1 bg-accent-500 text-white text-xs font-bold rounded-full mb-4 uppercase tracking-wider">Hoş Geldin Rafık</div>
+                <h2 class="text-4xl md:text-5xl font-bold text-stone-800 mb-6 leading-tight">Yazılım Projeleri Neden Batar?</h2>
+                <p class="text-lg text-stone-600 mb-8 leading-relaxed">
+                    Yazılım sadece kod yazmak değildir; doğru problemi, doğru şekilde, doğru insanlarla çözmektir. Bir analist disiplinsizse, sadece kod yazan bir kodlayıcıdan farksızdır. Bu 5 haftalık eğitim anatomisi, projelerinin batmaması için tasarlandı.
+                </p>
+                <div class="p-6 bg-white rounded-2xl shadow-sm border border-stone-100 border-l-4 border-l-brand-500">
+                    <h3 class="font-bold text-lg text-stone-800 mb-2">Akıl Hocanın Son Sözü (Peşinen)</h3>
+                    <p class="text-stone-600 italic">"Bu notları sadece sınava girmek için okuma. Dönem projesi olan 'Kampüs İkinci El Ürün Platformu'nu yaparken her adımı bu rehbere göre işlet. Disiplini elden bırakma, planını yap, koda en son gir!"</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="modul1" class="mb-24 hidden fade-in">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-stone-800 mb-4 border-b pb-2">🔑 Modül 1: Temelleri Sağlam Atmak</h2>
+                <p class="text-stone-600 mb-8">Bu bölümün amacı "Sistem" dediğimiz yapının sınırlarını ve temellerini kavramaktır. Unutma, çoğu yazılım kapalı değil, insan ve çevrenin dahil olduğu açık, sosyo-teknik sistemlerdir.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                        <div class="text-3xl mb-3">🔍</div>
+                        <h3 class="text-xl font-bold text-brand-700 mb-2">Analiz (Ne Yapılmalı?)</h3>
+                        <p class="text-stone-600 text-sm">Problem odaklıdır. Kullanıcı perspektifinden bakar. Hedefi, gereksinimleri net ve eksiksiz bir şekilde ortaya çıkarmaktır.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                        <div class="text-3xl mb-3">🏗️</div>
+                        <h3 class="text-xl font-bold text-accent-600 mb-2">Tasarım (Nasıl Yapılmalı?)</h3>
+                        <p class="text-stone-600 text-sm">Çözüm odaklıdır. Geliştirici perspektifinden bakar. Analiz aşamasında bulunan problemleri çözecek sistem mimarisini kurar.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-3xl shadow-lg border border-stone-100">
+                    <h3 class="text-2xl font-bold text-stone-800 mb-2 text-center">Hatayı Geç Bulmanın Maliyeti</h3>
+                    <p class="text-center text-sm text-stone-500 mb-8">Üretim aşamasında çözülen bir hata, analiz aşamasında çözülenden 100 kat daha pahalıdır!</p>
+                    <div class="chart-container">
+                        <canvas id="costChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="modul2" class="mb-24 hidden fade-in">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-stone-800 mb-4 border-b pb-2">🛠️ Modül 2: Savaş Planını Seçmek</h2>
+                <p class="text-stone-600 mb-8">Her projeye aynı elbiseyi giydiremezsin. Süreç modelleri, projenin doğasına göre doğru yönetim modelini seçmeni sağlar. İteratif (aynı şeyi iyileştirmek) ile Artımlı (parça parça büyütmek) farkını aklından çıkarma.</p>
+
+                <div class="flex flex-wrap gap-2 mb-6" id="model-tabs">
+                    <button class="px-4 py-2 bg-brand-700 text-white rounded-lg font-semibold text-sm transition" data-model="waterfall">Waterfall</button>
+                    <button class="px-4 py-2 bg-white text-stone-600 border border-stone-200 rounded-lg font-semibold text-sm hover:bg-stone-50 transition" data-model="vmodel">V-Model</button>
+                    <button class="px-4 py-2 bg-white text-stone-600 border border-stone-200 rounded-lg font-semibold text-sm hover:bg-stone-50 transition" data-model="prototype">Prototipleme</button>
+                    <button class="px-4 py-2 bg-white text-stone-600 border border-stone-200 rounded-lg font-semibold text-sm hover:bg-stone-50 transition" data-model="agile">Agile</button>
+                    <button class="px-4 py-2 bg-white text-stone-600 border border-stone-200 rounded-lg font-semibold text-sm hover:bg-stone-50 transition" data-model="scrum">Scrum</button>
+                    <button class="px-4 py-2 bg-white text-stone-600 border border-stone-200 rounded-lg font-semibold text-sm hover:bg-stone-50 transition" data-model="kanban">Kanban</button>
+                </div>
+
+                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-md border border-stone-100 min-h-[250px]" id="model-content">
+                    <div id="content-waterfall" class="model-pane">
+                        <h3 class="text-2xl font-bold text-brand-700 mb-3">Waterfall (Şelale)</h3>
+                        <p class="text-stone-700 mb-4">Aşamalar lineerdir (Gereksinim -> Tasarım -> Kod -> Test -> Canlı).</p>
+                        <ul class="list-disc pl-5 space-y-2 text-sm text-stone-600">
+                            <li><strong>Nerede Kullanılır:</strong> Gereksinimler baştan çok netse ve değişim maliyeti yüksekse (savunma, tıp).</li>
+                            <li><strong>Zayıf Yönü:</strong> Müşteri çalışan ürünü çok geç (en sonda) görür.</li>
+                        </ul>
+                    </div>
+                    <div id="content-vmodel" class="model-pane hidden">
+                        <h3 class="text-2xl font-bold text-brand-700 mb-3">V-Model</h3>
+                        <p class="text-stone-700 mb-4">Waterfall'un test odaklı halidir.</p>
+                        <ul class="list-disc pl-5 space-y-2 text-sm text-stone-600">
+                            <li>Her geliştirme adımının planlama aşamasında bir <strong>test karşılığı</strong> vardır.</li>
+                            <li>Örnek: Gereksinim Analizi yapılırken, Kabul Testi planlanır.</li>
+                        </ul>
+                    </div>
+                    <div id="content-prototype" class="model-pane hidden">
+                        <h3 class="text-2xl font-bold text-brand-700 mb-3">Prototipleme</h3>
+                        <p class="text-stone-700 mb-4">Gereksinimler sisliyse kullanılır. "Göster, konuş, düzelt" mantığı işler.</p>
+                        <ul class="list-disc pl-5 space-y-2 text-sm text-stone-600">
+                            <li>Kullanıcılar genellikle görsel bir şey görmeden ne istediklerini tam bilemezler.</li>
+                            <li><strong>Büyük Tehlike:</strong> Sadece fikir vermek için yapılan, çöpe atılması gereken (throw-away) prototipi alıp asıl ürünün kod tabanı yapmaya kalkmak projeyi çökertir!</li>
+                        </ul>
+                    </div>
+                    <div id="content-agile" class="model-pane hidden">
+                        <h3 class="text-2xl font-bold text-brand-700 mb-3">Agile (Çevik) Felsefesi</h3>
+                        <p class="text-stone-700 mb-4">Plansızlık demek değildir! Planı şartlara göre sürekli güncellemektir.</p>
+                        <ul class="list-disc pl-5 space-y-2 text-sm text-stone-600">
+                            <li>"Değişime yanıt vermek, katı bir planı izlemekten önemlidir."</li>
+                            <li>Kısa döngülerle müşteriye sürekli değer teslimi hedeflenir.</li>
+                        </ul>
+                    </div>
+                    <div id="content-scrum" class="model-pane hidden">
+                        <h3 class="text-2xl font-bold text-brand-700 mb-3">Scrum</h3>
+                        <p class="text-stone-700 mb-4">Zaman kutulu (Sprint) ve roller üzerinden çalışan çerçevedir.</p>
+                        <ul class="list-disc pl-5 space-y-2 text-sm text-stone-600">
+                            <li><strong>Roller:</strong> Product Owner (Değeri maksimize eder), Scrum Master (Engelleri kaldırır), Geliştirme Ekibi (Ürünü yapar).</li>
+                            <li>Ürün geliştirmede en yaygın kullanılan çevik yöntemdir.</li>
+                        </ul>
+                    </div>
+                    <div id="content-kanban" class="model-pane hidden">
+                        <h3 class="text-2xl font-bold text-brand-700 mb-3">Kanban</h3>
+                        <p class="text-stone-700 mb-4">Akış odaklıdır. Zaman kutuları (sprint) yoktur.</p>
+                        <ul class="list-disc pl-5 space-y-2 text-sm text-stone-600">
+                            <li><strong>Motto:</strong> "İşe başlamayı bırak, işi bitirmeye başla."</li>
+                            <li><strong>WIP Limitleri:</strong> Aynı anda üzerinde çalışılan iş (Work In Progress) sınırlandırılır.</li>
+                            <li>Sürekli bakım, destek (helpdesk) ve operasyon projelerinde parlar.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="modul3" class="mb-24 hidden fade-in">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-stone-800 mb-4 border-b pb-2">🎯 Modül 3: Teşhisi Doğru Koymak</h2>
+                <p class="text-stone-600 mb-8">Yanlış soruna doğru cevap verilmez. Yazılım projelerinin çoğu yanlış problemi mükemmel şekilde çözdüğü için başarısız olur. Bu bölüm mevcut durumu haritalayıp doğru teşhisi koymanı sağlar.</p>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                        <h3 class="text-lg font-bold text-stone-800 mb-3 flex items-center gap-2"><span class="text-xl">📝</span> Problem Bildirimi (5 Unsur)</h3>
+                        <ol class="list-decimal pl-5 space-y-2 text-sm text-stone-600">
+                            <li><strong class="text-stone-800">Kim?</strong> (Problemi yaşayan taraf)</li>
+                            <li><strong class="text-stone-800">Ne?</strong> (Problemin ne olduğu)</li>
+                            <li><strong class="text-stone-800">Nerede/Nasıl?</strong> (Bağlam)</li>
+                            <li><strong class="text-stone-800">Neden?</strong> (Mevcut çözümlerin yetersizliği)</li>
+                            <li><strong class="text-stone-800">Sonuç?</strong> (Başarılı çözümün görünümü)</li>
+                        </ol>
+                        <div class="mt-4 p-3 bg-red-50 text-red-700 text-xs rounded border border-red-100">
+                            <strong>Kapsam (Scope) Sürünmesi:</strong> Sessiz katildir. Neyin yapılacağı kadar, neyin <strong>YAPILMAYACAĞINI</strong> baştan yaz!
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                        <h3 class="text-lg font-bold text-stone-800 mb-3 flex items-center gap-2"><span class="text-xl">⚖️</span> Varsayım vs Kısıt</h3>
+                        <div class="space-y-4 text-sm text-stone-600">
+                            <div class="p-3 bg-amber-50 border border-amber-100 rounded">
+                                <strong class="text-amber-800 block mb-1">Varsayım (Risk İçerir)</strong>
+                                Henüz doğrulanmamış kabuldür. Yanlış çıkarsa proje çöker. <em>(Örn: Kullanıcı internete sahip)</em>
+                            </div>
+                            <div class="p-3 bg-stone-100 border border-stone-200 rounded">
+                                <strong class="text-stone-800 block mb-1">Kısıt (Esnetilemez)</strong>
+                                Üzerinde pazarlık yapılamaz sınırlar. <em>(Örn: Bütçe kesinlikle 50.000 TL)</em>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-2xl font-bold text-stone-800 mb-4 text-center">Paydaş Analizi (Güç / İlgi Matrisi)</h3>
+                <p class="text-center text-sm text-stone-500 mb-6">Her paydaş eşit değildir. Kiminle nasıl iletişim kuracağını stratejik olarak belirle. Tıklayarak stratejileri gör.</p>
+                
+                <div class="grid grid-cols-2 grid-rows-2 gap-4 max-w-2xl mx-auto h-80 relative" id="stakeholder-matrix">
+                    <div class="matrix-cell cursor-pointer bg-red-100 border-2 border-red-300 rounded-xl p-4 flex flex-col justify-center items-center text-center group" onclick="showMatrixDetail('yakindan-yonet')">
+                        <span class="text-red-800 font-bold mb-1">Yüksek Güç</span>
+                        <span class="text-red-800 font-bold">Yüksek İlgi</span>
+                        <div class="mt-2 px-3 py-1 bg-white rounded-full shadow text-sm font-semibold">Yakından Yönet</div>
+                    </div>
+                    <div class="matrix-cell cursor-pointer bg-orange-100 border-2 border-orange-300 rounded-xl p-4 flex flex-col justify-center items-center text-center group" onclick="showMatrixDetail('memnun-tut')">
+                        <span class="text-orange-800 font-bold mb-1">Yüksek Güç</span>
+                        <span class="text-orange-800 font-bold">Düşük İlgi</span>
+                        <div class="mt-2 px-3 py-1 bg-white rounded-full shadow text-sm font-semibold">Memnun Tut</div>
+                    </div>
+                    <div class="matrix-cell cursor-pointer bg-blue-100 border-2 border-blue-300 rounded-xl p-4 flex flex-col justify-center items-center text-center group" onclick="showMatrixDetail('bilgilendir')">
+                        <span class="text-blue-800 font-bold mb-1">Düşük Güç</span>
+                        <span class="text-blue-800 font-bold">Yüksek İlgi</span>
+                        <div class="mt-2 px-3 py-1 bg-white rounded-full shadow text-sm font-semibold">Bilgilendir</div>
+                    </div>
+                    <div class="matrix-cell cursor-pointer bg-stone-200 border-2 border-stone-300 rounded-xl p-4 flex flex-col justify-center items-center text-center group" onclick="showMatrixDetail('izle')">
+                        <span class="text-stone-800 font-bold mb-1">Düşük Güç</span>
+                        <span class="text-stone-800 font-bold">Düşük İlgi</span>
+                        <div class="mt-2 px-3 py-1 bg-white rounded-full shadow text-sm font-semibold">İzle</div>
+                    </div>
+                </div>
+                
+                <div id="matrix-detail" class="max-w-2xl mx-auto mt-6 p-4 bg-brand-50 text-brand-900 rounded-lg text-center hidden font-medium border border-brand-200">
+                    <!-- Dinamik içerik -->
+                </div>
+
+                <div class="mt-12 bg-stone-800 text-white p-8 rounded-3xl text-center">
+                    <h3 class="text-xl font-bold text-accent-500 mb-2">As-Is vs To-Be Analizi</h3>
+                    <p class="text-sm opacity-90 max-w-xl mx-auto">
+                        Mevcut berbat bir süreci dijitalleştirmek, sadece <strong>"berbat bir otomasyon"</strong> yaratır. Önce mevcut durumu <em>(As-Is)</em> çizip darboğazları bulmalı, sonra hedef durumu <em>(To-Be)</em> baştan tasarlamalısın. Swimlane diyagramları senin en iyi dostundur.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="modul4" class="mb-24 hidden fade-in">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-stone-800 mb-4 border-b pb-2">🧬 Modül 4: Yazılımın DNA'sı (Gereksinim Mühendisliği)</h2>
+                <p class="text-stone-600 mb-8">Sistemi neyin inşa edeceğini net, ölçülebilir ve eksiksiz yazma sanatı. Yanlış gereksinim = Yanlış DNA = Hastalıklı Sistem.</p>
+
+                <div class="grid md:grid-cols-2 gap-6 mb-12">
+                    <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100">
+                        <h4 class="text-blue-800 font-bold text-lg mb-2">Fonksiyonel (FR)</h4>
+                        <p class="text-sm text-blue-900 mb-2">Sistemin <strong>"NE"</strong> yapacağıdır.</p>
+                        <ul class="list-disc pl-4 text-xs text-blue-800 space-y-1">
+                            <li>Kullanıcı e-posta ile giriş yapabilmeli.</li>
+                            <li>Sepete ürün eklenebilmeli.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-emerald-50 p-6 rounded-2xl border border-emerald-100">
+                        <h4 class="text-emerald-800 font-bold text-lg mb-2">Fonksiyonel Olmayan (NFR)</h4>
+                        <p class="text-sm text-emerald-900 mb-2">Sistemin <strong>"NASIL"</strong> çalışacağıdır. <em>(İhmal edilirse proje çöker!)</em></p>
+                        <ul class="list-disc pl-4 text-xs text-emerald-800 space-y-1">
+                            <li>Performans (Sistem 500ms içinde yanıt vermeli).</li>
+                            <li>Güvenlik, Ölçeklenebilirlik, Kullanılabilirlik.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 mb-12">
+                    <h3 class="text-xl font-bold text-stone-800 mb-3">SMART Kuralı ve "Salatalık Gereksinimi"</h3>
+                    <p class="text-sm text-stone-600 mb-4">
+                        <span class="line-through text-red-500">"Sistem hızlı olmalı"</span> bir gereksinim değil, dilektir. Dışarıdan yeşil görünür ama içi boştur (Salatalık). İyi gereksinim SMART olmalı:
+                    </p>
+                    <div class="flex flex-wrap gap-2 text-xs font-bold text-brand-700">
+                        <span class="px-3 py-1 bg-brand-50 rounded">S: Specific (Özgül)</span>
+                        <span class="px-3 py-1 bg-brand-50 rounded">M: Measurable (Ölçülebilir)</span>
+                        <span class="px-3 py-1 bg-brand-50 rounded">A: Achievable (Ulaşılabilir)</span>
+                        <span class="px-3 py-1 bg-brand-50 rounded">R: Relevant (İlgili)</span>
+                        <span class="px-3 py-1 bg-brand-50 rounded">T: Time-bound (Zamanlı)</span>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-3xl shadow-lg border border-stone-100 flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold text-stone-800 mb-3">MoSCoW Önceliklendirmesi</h3>
+                        <p class="text-sm text-stone-600 mb-4">Tüm gereksinimler eşit değildir. Önceliklendirme yapmazsan kaynakların tükenir.</p>
+                        <ul class="space-y-3 text-sm">
+                            <li class="flex items-start gap-2"><strong class="text-red-600 w-16">Must:</strong> <span class="text-stone-600">Olmazsa olmaz. Onsuz sistemin anlamı yok.</span></li>
+                            <li class="flex items-start gap-2"><strong class="text-orange-500 w-16">Should:</strong> <span class="text-stone-600">Önemli ama şart değil.</span></li>
+                            <li class="flex items-start gap-2"><strong class="text-blue-500 w-16">Could:</strong> <span class="text-stone-600">Vakit/bütçe kalırsa güzel olur.</span></li>
+                            <li class="flex items-start gap-2"><strong class="text-stone-400 w-16">Won't:</strong> <span class="text-stone-600">Bu sürümde kesinlikle yapılmayacaklar.</span></li>
+                        </ul>
+                        <div class="mt-4 p-3 bg-red-50 text-red-700 text-xs font-bold rounded">
+                            Altın Kural: Must Have gereksinimleri, toplam listenin %60'ını geçmemelidir!
+                        </div>
+                    </div>
+                    <div class="chart-container w-full md:w-1/2 flex-shrink-0">
+                        <canvas id="moscowChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="modul5" class="mb-24 hidden fade-in">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-stone-800 mb-4 border-b pb-2">🧠 Modül 5: Zihin Okuma Sanatı</h2>
+                <p class="text-stone-600 mb-8">Kullanıcıların kafasının içine girmek. Kullanıcılar genellikle ne istediklerini bilmezler; onlara "ne istediğini" değil, "neye ihtiyacı olduğunu" bulmalısın.</p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-12">
+                    <div class="p-4 bg-white border border-stone-200 rounded-xl hover:shadow-md transition">
+                        <div class="text-2xl mb-2">🗣️</div>
+                        <h4 class="font-bold text-brand-700">1. Görüşme (Interview)</h4>
+                        <p class="text-xs text-stone-600 mt-1">En güçlü silah. Açık uçlu sorular sor, "5 Neden" tekniğini kullan. Kendi varsayımını dayatma.</p>
+                    </div>
+                    <div class="p-4 bg-white border border-stone-200 rounded-xl hover:shadow-md transition">
+                        <div class="text-2xl mb-2">📋</div>
+                        <h4 class="font-bold text-brand-700">2. Anket (Survey)</h4>
+                        <p class="text-xs text-stone-600 mt-1">Derinliği yoktur ama çok kişiden nicel veri toplar. Likert ölçeği kullan, soruları kısa tut.</p>
+                    </div>
+                    <div class="p-4 bg-white border border-stone-200 rounded-xl hover:shadow-md transition">
+                        <div class="text-2xl mb-2">👁️</div>
+                        <h4 class="font-bold text-brand-700">3. Gözlem (Observation)</h4>
+                        <p class="text-xs text-stone-600 mt-1">Kullanıcılar yalan söyleyebilir ama eylemleri söylemez. Gölge çalışma (Shadowing) yap.</p>
+                    </div>
+                    <div class="p-4 bg-white border border-stone-200 rounded-xl hover:shadow-md transition">
+                        <div class="text-2xl mb-2">📄</div>
+                        <h4 class="font-bold text-brand-700">4. Doküman Analizi</h4>
+                        <p class="text-xs text-stone-600 mt-1">Mevcut sistemi anlama. Formlar, hata logları, eski kılavuzlar altın değerindedir.</p>
+                    </div>
+                    <div class="p-4 bg-white border border-stone-200 rounded-xl hover:shadow-md transition">
+                        <div class="text-2xl mb-2">🤝</div>
+                        <h4 class="font-bold text-brand-700">5. Workshop (JAD)</h4>
+                        <p class="text-xs text-stone-600 mt-1">Çatışan paydaşları aynı odaya toplayıp uzlaşma sağlama yeridir.</p>
+                    </div>
+                    <div class="p-4 bg-white border border-stone-200 rounded-xl hover:shadow-md transition">
+                        <div class="text-2xl mb-2">📱</div>
+                        <h4 class="font-bold text-brand-700">6. Prototip</h4>
+                        <p class="text-xs text-stone-600 mt-1">IKIWISI (Gördüğümde anlıyorum). Kullanıcı soyut metni değil ekranı anlar. Tuzak: Bunu bitmiş ürün sanmasınlar.</p>
+                    </div>
+                </div>
+
+                <div class="bg-stone-50 border border-stone-200 rounded-2xl overflow-hidden">
+                    <div class="bg-stone-200 px-6 py-3 border-b border-stone-300">
+                        <h3 class="font-bold text-stone-800 text-center">Belgeleme Formatları: Use Case vs User Story</h3>
+                    </div>
+                    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                        <div class="flex-1 p-6">
+                            <h4 class="font-bold text-brand-700 mb-2">Use Case</h4>
+                            <ul class="text-sm text-stone-600 list-disc pl-4 space-y-2">
+                                <li>Uzun ve çok detaylıdır.</li>
+                                <li>Ana akış ve alternatif akışları barındırır.</li>
+                                <li>Waterfall / RUP gibi geleneksel yöntemlerle dosttur.</li>
+                            </ul>
+                        </div>
+                        <div class="flex-1 p-6">
+                            <h4 class="font-bold text-accent-600 mb-2">User Story</h4>
+                            <ul class="text-sm text-stone-600 list-disc pl-4 space-y-2">
+                                <li>Kısa, herkesin anlayabileceği formattadır.</li>
+                                <li>"Ben bir [rol] olarak, [amaç] için [işlev] istiyorum."</li>
+                                <li>Agile uyumludur, "Kabul Kriterleri" ile birlikte yaşar.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Navigation Logic
+        const navButtons = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('main section');
+
+        navButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                navButtons.forEach(b => {
+                    b.classList.remove('active', 'bg-brand-50', 'text-brand-700', 'border-r-4', 'border-brand-700');
+                    b.classList.add('text-stone-600');
+                    b.style.backgroundColor = '';
+                    b.style.borderRight = '';
+                });
+                
+                btn.classList.add('active');
+                btn.classList.remove('text-stone-600');
+                
+                const targetId = btn.getAttribute('data-target');
+                sections.forEach(sec => {
+                    sec.classList.add('hidden');
+                    sec.classList.remove('fade-in');
+                });
+                
+                const targetSec = document.getElementById(targetId);
+                targetSec.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    targetSec.classList.add('fade-in');
+                }, 10);
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                if(targetId === 'modul1' && !window.costChartRendered) {
+                    renderCostChart();
+                    window.costChartRendered = true;
+                }
+                if(targetId === 'modul4' && !window.moscowChartRendered) {
+                    renderMoscowChart();
+                    window.moscowChartRendered = true;
+                }
+            });
+        });
+
+        // Module 2 Tabs Logic
+        const modelTabs = document.querySelectorAll('#model-tabs button');
+        const modelPanes = document.querySelectorAll('.model-pane');
+
+        modelTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                modelTabs.forEach(t => {
+                    t.classList.remove('bg-brand-700', 'text-white');
+                    t.classList.add('bg-white', 'text-stone-600');
+                });
+                tab.classList.remove('bg-white', 'text-stone-600');
+                tab.classList.add('bg-brand-700', 'text-white');
+
+                const targetModel = tab.getAttribute('data-model');
+                modelPanes.forEach(pane => {
+                    pane.classList.add('hidden');
+                });
+                document.getElementById('content-' + targetModel).classList.remove('hidden');
+            });
+        });
+
+        // Stakeholder Matrix Interaction
+        const matrixContent = {
+            'yakindan-yonet': '<strong>Yakından Yönet:</strong> En kritik gruptur. Kararlara aktif dahil et, sürekli toplantı yap, fikirlerini kodlanmadan önce al. (Örn: Proje Sponsoru, IT Yöneticisi)',
+            'memnun-tut': '<strong>Memnun Tut:</strong> Sisteme pek ilgileri yoktur ama bütçeyi kesebilirler! Detaya boğma, periyodik özet raporlar ve executive dashboardlar sun. (Örn: Rektör, Finans Direktörü)',
+            'bilgilendir': '<strong>Bilgilendir:</strong> Karar güçleri azdır ama sistemi onlar kullanır. Bol bol beta testine sok, anket gönder, değişiklikleri e-posta ile haber ver. (Örn: Öğrenciler, Son Kullanıcılar)',
+            'izle': '<strong>İzle:</strong> Ne gücü ne de ilgisi vardır. Fazla enerji harcama ama göz ucuyla takip et. İlgisi veya gücü artarsa stratejini değiştir. (Örn: Çevre Birimler)'
+        };
+
+        window.showMatrixDetail = function(key) {
+            const detailBox = document.getElementById('matrix-detail');
+            detailBox.innerHTML = matrixContent[key];
+            detailBox.classList.remove('hidden');
+            detailBox.classList.add('fade-in');
+        };
+
+        // Charts Configuration
+        Chart.defaults.font.family = 'Inter, sans-serif';
+        Chart.defaults.color = '#57534e'; 
+
+        function renderCostChart() {
+            const ctx = document.getElementById('costChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Analiz', 'Tasarım', 'Geliştirme', 'Test', 'Üretim (Canlı)'],
+                    datasets: [{
+                        label: 'Göreceli Hata Çözüm Maliyeti',
+                        data: [1, 5, 10, 20, 100],
+                        backgroundColor: [
+                            '#14b8a6', 
+                            '#3b82f6', 
+                            '#f59e0b', 
+                            '#ef4444', 
+                            '#7f1d1d'  
+                        ],
+                        borderWidth: 0,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Maliyet Çarpanı: ' + context.raw + 'x';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#f5f5f4' },
+                            title: { display: true, text: 'Maliyet Çarpanı' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderMoscowChart() {
+            const ctx = document.getElementById('moscowChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Must Have (Max %60)', 'Should Have', 'Could Have', 'Won\'t Have'],
+                    datasets: [{
+                        data: [60, 20, 15, 5],
+                        backgroundColor: [
+                            '#ef4444', 
+                            '#f97316', 
+                            '#3b82f6', 
+                            '#a8a29e'  
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff',
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { padding: 20, font: { size: 12 } }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.label + ': %' + context.raw;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
